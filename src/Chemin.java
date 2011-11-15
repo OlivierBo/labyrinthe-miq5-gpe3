@@ -1,18 +1,18 @@
 
 public class Chemin {
 	
-	private int deplacement[][]; // Deplacement par coordonnées 1er élément : ligne ; 2nd élément : colonne
+	private int deplacement[][]; // Deplacement par coordonnï¿½es 1er ï¿½lï¿½ment : ligne ; 2nd ï¿½lï¿½ment : colonne
 	
-	private int nbcases; // Nombre de cases explorées
+	private int nbcases; // Nombre de cases explorï¿½es
 	
 	// Constructeur
 	public Chemin(){
 		int i=0;
-		setDeplacement(new int[200][2]);
+		deplacement=new int[200][2];
 		
-		getDeplacement()[0][0]=2;
-		getDeplacement()[0][1]=2;
-		updateNbcase();	
+		deplacement[0][0]=2;
+		deplacement[0][1]=2;
+		this.updateNbcase();	
 	}
 	
 	public void updateNbcase(){
