@@ -41,7 +41,7 @@ import javax.swing.JPanel;
 	
 
 	public void paintComponent(Graphics g){
-		//On décide d'une couleur de fond pour notre rectangle
+		//On dÃ©cide d'une couleur de fond pour notre rectangle
 		g.setColor(Color.white);
 		//On dessine celui-ci afin qu'il prenne tout la surface
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());

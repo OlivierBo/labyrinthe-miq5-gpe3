@@ -23,12 +23,12 @@ public class Labyrinthe {
 	return murs[y][x]=='+';
     }
 	
-	// est-ce que (x,y) est un départ ?
+	// est-ce que (x,y) est un dÃ©part ?
     boolean estDepart(int x, int y) {
 	return murs[y][x]=='D';
     }
     
-	// est-ce que (x,y) est une arrivée ?
+	// est-ce que (x,y) est une arrivÃ©e ?
     boolean estArrivee(int x, int y) {
 	return murs[y][x]=='A';
     }

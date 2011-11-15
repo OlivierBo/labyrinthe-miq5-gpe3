@@ -1,9 +1,9 @@
 
 public class Echantillon {
 	
-	private Individu individus[]; // Tableau des individus de l'échantillon
+	private Individu individus[]; // Tableau des individus de l'echantillon
 	
-	private int nbIndividu; // Nombre d'individu dans l'échantillon
+	private int nbIndividu; // Nombre d'individu dans l'echantillon
 	
 	private int tempsResolution;
 

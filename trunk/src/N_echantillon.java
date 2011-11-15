@@ -9,7 +9,7 @@ public class N_echantillon {
 	
 	// Constructeur
 	public N_echantillon(int n, int nbI){
-		System.out.println("Création n_echantillon");
+		System.out.println("CrÃ©ation n_echantillon");
 		n_echantillon=new Echantillon[n];
 		for(int i=0;i<n;i++){
 		n_echantillon[i]= new Echantillon(nbI);	

@@ -1,7 +1,7 @@
 
 public class Individu{
 
-	public char[][] map; //Matrice qui sera visualisée
+	public char[][] map; //Matrice qui sera visualisÃ©e
 	
 	protected Chemin chemin = new Chemin();	// Chemin de l'individu
 	

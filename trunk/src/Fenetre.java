@@ -52,7 +52,7 @@ public class Fenetre extends JFrame {
 		
 		String[] listeE={"1","2","3","4","5","6","7","8","9","10"};
 		String[] listeI={"10","20","30","40","50","60","70","80","90","100","110","120","130","140","150","160","170","180","190","200"};
-		String[] listeResol ={"DFS","BFS","Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques","Algorithme de colonies de fourmis", "Logique de prpositions","Logique de prédicats"};
+		String[] listeResol ={"DFS","BFS","Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulÃ©", "Algorithme gÃ©nÃ©tiques","Algorithme de colonies de fourmis", "Logique de prpositions","Logique de prÃ©dicats"};
 		
 		// Ecoute des commandes
 
@@ -80,9 +80,9 @@ public class Fenetre extends JFrame {
 		// Placement des commande du haut
 		north.setPreferredSize(new Dimension(600, 80));
 		north.setLayout(new GridLayout(3, 3 , 5 , 5));
-		north.add(new JLabel("Nombre d'échantillon"));
+		north.add(new JLabel("Nombre d'Ã©chantillon"));
 		north.add(new JLabel("Nombre d'individus"));
-		north.add(new JLabel("Type de résolution"));
+		north.add(new JLabel("Type de rÃ©solution"));
 		north.add(comboBoxNbE);
 		north.add(comboBoxNbI);
 		north.add(comboBoxTypeResolution);
@@ -102,25 +102,25 @@ public class Fenetre extends JFrame {
 		
 		
 		
-		//Ce sont maintenant nos classes internes qui écoutent nos boutons
+		//Ce sont maintenant nos classes internes qui ï¿½coutent nos boutons
 		
 		south.setPreferredSize(new Dimension(600,100));
 		south.setLayout(new GridLayout(4, 4 , 5 , 5));
-		south.add (new JLabel("Numéro Echantillon :"));
+		south.add (new JLabel("NumÃ©ro Echantillon :"));
 		south.add(labelE);
-		south.add (new JLabel("Numéro Individu :"));
+		south.add (new JLabel("NumÃ©ro Individu :"));
 		south.add(labelI);
 		south.add (new JLabel("Distance :"));
 		south.add(labelD);
-		south.add (new JLabel("Cases explorées :"));
+		south.add (new JLabel("Cases explorÃ©es :"));
 		south.add(labelC);
-		south.add (new JLabel("Moyenne temps de résolution réussite échantillon :"));
+		south.add (new JLabel("Moyenne temps de rÃ©solution rÃ©ussite Ã©chantillon :"));
 		south.add(labelM);
-		south.add (new JLabel("Pourcentage de réussite :"));
+		south.add (new JLabel("Pourcentage de rÃ©ussite :"));
 		south.add(labelP);
-		south.add (new JLabel("Critère 1 :"));
+		south.add (new JLabel("CritÃ¨re 1 :"));
 		south.add(labelC1);
-		south.add (new JLabel("Critère 2 :"));
+		south.add (new JLabel("CritÃ¨re 2 :"));
 		south.add(labelC2);
 	
 		
@@ -169,7 +169,7 @@ public class Fenetre extends JFrame {
 
 
 	/**
-	* Classe interne implémentant l'interface ItemListener
+	* Classe interne implÃ©mentant l'interface ItemListener
 	*/
 
 	class ItemActionNbE implements ActionListener{
@@ -190,13 +190,13 @@ public class Fenetre extends JFrame {
 	class ItemActionResol implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
 			
-		label1.setText("action sur "+ comboBoxTypeResolution.getSelectedItem() +" dans type de résolution "+comboBoxTypeResolution.getSelectedIndex() )  ;
+		label1.setText("action sur "+ comboBoxTypeResolution.getSelectedItem() +" dans type de rï¿½solution "+comboBoxTypeResolution.getSelectedIndex() )  ;
 		}
 		}
 	
 	class BoutonLancerListener implements ActionListener{
 		/**
-		* Redéfinition de la méthode actionPerformed
+		* Redï¿½finition de la mÃ©thode actionPerformed
 		*/
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (false);
@@ -300,9 +300,11 @@ public class Fenetre extends JFrame {
 				getPan().setNbIndividu(200);
 				break;
 			}
+                        
+                        
 			
 			
-		label1.setText("Vous avez cliqué sur le bouton Lancer");
+		label1.setText("Vous avez cliquÃ© sur le bouton Lancer");
 		System.out.println("Parametres d'execution : NbE = "+comboBoxNbE.getSelectedItem()+"  NbI : "+comboBoxNbI.getSelectedItem()+ "  Algo  " +comboBoxTypeResolution.getSelectedItem());
 
 		switch(comboBoxTypeResolution.getSelectedIndex()){
@@ -348,7 +350,7 @@ public class Fenetre extends JFrame {
 	
 	class BoutonArreterListener implements ActionListener{
 		/**
-		* Redéfinition de la méthode actionPerformed
+		* Redï¿½finition de la mÃ©thode actionPerformed
 		*/
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (true);
@@ -356,18 +358,18 @@ public class Fenetre extends JFrame {
 			comboBoxNbE.setEnabled (true);
 			comboBoxNbI.setEnabled (true);
 			comboBoxTypeResolution.setEnabled (true);
-		label1.setText("Vous avez cliqué sur le bouton Arreter");
+		label1.setText("Vous avez cliquÃ© sur le bouton Arreter");
 		
 		}
 		}
 	
 	class BoutonContinuerListener implements ActionListener{
 		/**
-		* Redéfinition de la méthode actionPerformed
+		* Redï¿½finition de la mï¿½thode actionPerformed
 		*/
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (false);
-		label1.setText("Vous avez cliqué sur le bouton Continuer");
+		label1.setText("Vous avez cliquÃ© sur le bouton Continuer");
 
 		}
 		}
