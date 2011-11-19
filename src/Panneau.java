@@ -6,16 +6,15 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 	public class Panneau extends JPanel implements Resolution{
-	/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+
 	private N_echantillon n_echantillon=new N_echantillon(1,1);
 	private int c=32; // Taille cellule
 	private int nbIndividu;
 	private int nbEchantillon;
 	private int numeroIndividu;
 	private int numeroEchantillon;
+        private int numeroIndividuEncours;
+	private int numeroEchantillonEncours;
 	private float distanceCible=(float) 0.0;
 	private int caseExplorees;
 	private float moyenneTempsResolution;
@@ -23,11 +22,16 @@ import javax.swing.JPanel;
 	private float critere1;
 	private float critere2;
 	
+        /*
+         * Constructeurs
+         */
 	public Panneau(){	
 	nbIndividu=1;
 	nbEchantillon=1;
 	numeroIndividu=1;
 	numeroEchantillon=1;
+        numeroIndividuEncours=1;
+	numeroEchantillonEncours=1;
 	n_echantillon=new N_echantillon(1,1);
 	}
 	
@@ -39,13 +43,16 @@ import javax.swing.JPanel;
 		n_echantillon=new N_echantillon(nbE,nbI);
 		}
 	
-
+        /*
+         Dessin du labyrinthe
+         */
 	public void paintComponent(Graphics g){
 		//On décide d'une couleur de fond pour notre rectangle
 		g.setColor(Color.white);
 		//On dessine celui-ci afin qu'il prenne tout la surface
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
+                // 2 boucles for imbriquées pour parcourir et dessiner le labyrinthe
 		for (int x=0; x<n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.n(); x++){
 			for (int y=0; y<n_echantillon.getEchantillon(1).getIndividu(numeroIndividu).labyrinthe.n(); y++) {
 				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.estMur(x,y)) {
@@ -63,6 +70,7 @@ import javax.swing.JPanel;
 				}
 			}
 		}
+                // On prend le déplacement de l'individu et on le dessine
 		int[][] dep=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement();
 		n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().updateNbcase();
 		int ndep=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getNbcases();
@@ -70,17 +78,20 @@ import javax.swing.JPanel;
 		int yd;
 		g.setColor(Color.blue);
 		for(int i=0; i< (ndep-1); i++){
-			xd=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement()[i][0];
-			yd=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement()[i][1];
+			xd=dep[i][0];
+			yd=dep[i][1];
 			g.fillRect(xd*c+c/4, yd*c+c/4, c/2, c/2);
 		}
 		g.setColor(Color.green);
-		xd=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement()[ndep-1][0];
-		yd=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement()[ndep-1][1];
+		xd=dep[ndep-1][0];
+		yd=dep[ndep-1][1];
 		g.fillRect(xd*c+c/4, yd*c+c/4, c/2, c/2);
 		    
 	}
-
+        
+        /*
+         * Accesseurs
+         */
 	public N_echantillon getN_Echantillon(){
 		return n_echantillon;
 	}
@@ -187,7 +198,9 @@ import javax.swing.JPanel;
 	}
 
 
-
+        /*
+         * Définition des méthodes de résolution
+         */
 
 	@Override
 	public void BFS(int nbIndividu) {

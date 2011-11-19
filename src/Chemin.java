@@ -10,8 +10,8 @@ public class Chemin {
 		int i=0;
 		deplacement=new int[200][2];
 		
-		deplacement[0][0]=2;
-		deplacement[0][1]=2;
+		deplacement[0][0]=1;
+		deplacement[0][1]=1;
 		this.updateNbcase();	
 	}
 	
@@ -25,7 +25,7 @@ public class Chemin {
 	
 	public boolean existeDeja(int x, int y){
 		boolean existe=false;
-		for(int i=0; i<=nbcases;i++){
+		for(int i=0; i<=nbcases-1;i++){
 			if(deplacement[i][0]==x && deplacement[i][1]==y){
 				existe=true;
 			}
@@ -49,6 +49,7 @@ public class Chemin {
 
 	public void setDeplacement(int deplacement[][]) {
 		this.deplacement = deplacement;
+                updateNbcase();
 	}
 
 }

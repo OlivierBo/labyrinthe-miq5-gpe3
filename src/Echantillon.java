@@ -5,7 +5,7 @@ public class Echantillon {
 	
 	private int nbIndividu; // Nombre d'individu dans l'echantillon
 	
-	private int tempsResolution;
+	private int tempsResolution; //Image du temps de résolution
 
 	//Constructeur
 	public Echantillon(int n){
@@ -15,7 +15,7 @@ public class Echantillon {
 			individus[i] = new Individu();	
 			}
 		nbIndividu=n;
-		setTempsResolution(0);
+		tempsResolution=0;
 	}
 	
 	

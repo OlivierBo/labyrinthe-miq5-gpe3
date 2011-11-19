@@ -13,53 +13,68 @@ import javax.swing.JPanel;
 
 
 public class Fenetre extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    
+        // Panneau affichage labyrinthe
 	private Panneau pan = new Panneau();
-	private JComboBox comboBoxNbE = new JComboBox();
+        
+        // JComboBox : listes déroulantes
+	private JComboBox comboBoxNbE = new JComboBox(); 
 	private JComboBox comboBoxNbI = new JComboBox();
 	private JComboBox comboBoxTypeResolution = new JComboBox();
-	private JButton boutonLancer = new JButton("Lancer");
+        
+        //JButton : Bouton
+	private JButton boutonLancer = new JButton("Lancer");   
 	private JButton boutonArreter = new JButton("Arreter");
 	private JButton boutonContinuer = new JButton("Continuer");
-	private JPanel container = new JPanel();
+        
+        // JPanel : Layout pour placer les boutons et informations
+	private JPanel container = new JPanel();    
 	private JPanel south = new JPanel();
 	private JPanel north2 = new JPanel();
 	private JPanel north = new JPanel();
-	private JLabel label1 = new JLabel("");
+        
+        //Jlabel : Ecriture de chaîne de caractères sur l'interface
+        private JLabel label1 = new JLabel(""); 
 	private JLabel labelE = new JLabel("0");
 	private JLabel labelI = new JLabel("0");
 	private JLabel labelD = new JLabel("0");
 	private JLabel labelC = new JLabel("0");
 	private JLabel labelM = new JLabel("0");
 	private JLabel labelP = new JLabel("0");
-	private JLabel labelC1 = new JLabel("0");
-	private JLabel labelC2 = new JLabel("0"); 
+	private JLabel labelC1 = new JLabel("0.0");
+	private JLabel labelC2 = new JLabel("0.0"); 
 	
 	
-	
-	private boolean animated = true;
+        // Boolean en cours d'animation ?
+        private boolean animated = true;
+        
+        // Thread (à voir si il sera utilisé)
 	private Thread t;
 	
+        
+        /*
+         Constructeur
+         */
 	public Fenetre(){
 		
+            /*
+             Définition de la fenetre
+             */
 		this.setTitle("Resolution Labyrinthe - Projet Informatique");
 		this.setSize(600, 720);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
+                // Définition des listes déroulantes
 		String[] listeE={"1","2","3","4","5","6","7","8","9","10"};
 		String[] listeI={"10","20","30","40","50","60","70","80","90","100","110","120","130","140","150","160","170","180","190","200"};
 		String[] listeResol ={"DFS","BFS","Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques","Algorithme de colonies de fourmis", "Logique de prpositions","Logique de prédicats"};
 		
-		// Ecoute des commandes
-
 		comboBoxNbE = new JComboBox(listeE);
 		comboBoxNbI = new JComboBox(listeI);
 		comboBoxTypeResolution = new JComboBox(listeResol);
-		
+                
+                //Définition de l'écoute des commandes
 		comboBoxNbE.addActionListener(new ItemActionNbE());
 		comboBoxNbE.setPreferredSize(new Dimension(60,20));
 		comboBoxNbE.setForeground (Color.blue);
@@ -77,7 +92,7 @@ public class Fenetre extends JFrame {
 		boutonContinuer.addActionListener(new BoutonContinuerListener());
 		
 		
-		// Placement des commande du haut
+		// Placement des commandes du haut
 		north.setPreferredSize(new Dimension(600, 80));
 		north.setLayout(new GridLayout(3, 3 , 5 , 5));
 		north.add(new JLabel("Nombre d'échantillon"));
@@ -99,11 +114,7 @@ public class Fenetre extends JFrame {
 		north2.add(label1 ,BorderLayout.NORTH);
 		north2.add(north, BorderLayout.SOUTH);
 		
-		
-		
-		
-		//Ce sont maintenant nos classes internes qui �coutent nos boutons
-		
+		//Placement des info du bas
 		south.setPreferredSize(new Dimension(600,100));
 		south.setLayout(new GridLayout(4, 4 , 5 , 5));
 		south.add (new JLabel("Numéro Echantillon :"));
@@ -124,18 +135,27 @@ public class Fenetre extends JFrame {
 		south.add(labelC2);
 	
 		
-		
+                //Placement du labyrinthe au milieu et layout final
 		container.setBackground (Color.white);
 		container.setLayout(new BorderLayout());
 		container.add (north2, BorderLayout.NORTH);
-		container.add (getPan(), BorderLayout.CENTER );
+		container.add (pan, BorderLayout.CENTER );
 		container.add (south, BorderLayout.SOUTH);
 
+                // Activer l'interface
 		this.setContentPane(container);
 		this.setVisible(true);
 	}
 
-	
+        /*
+         Dessiner toutes les n itération le meilleur résultat
+         */
+	public void meilleurIndividu(Panneau panneau){
+            // Ecrit et dessinne le score du meilleur individu
+        }
+        
+        
+        
 	public boolean isAnimated() {
 		return animated;
 	}
@@ -169,9 +189,9 @@ public class Fenetre extends JFrame {
 
 
 	/**
-	* Classe interne implémentant l'interface ItemListener
+	* Classes internes implémentant l'interface (méthode active suivant
+         l'appui d'un bouton
 	*/
-
 	class ItemActionNbE implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
 			
@@ -194,10 +214,8 @@ public class Fenetre extends JFrame {
 		}
 		}
 	
+        //Appui bouton Lancer
 	class BoutonLancerListener implements ActionListener{
-		/**
-		* Red�finition de la méthode actionPerformed
-		*/
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (false);
 			boutonArreter.setEnabled (true);
@@ -205,6 +223,7 @@ public class Fenetre extends JFrame {
 			comboBoxNbI.setEnabled (false);
 			comboBoxTypeResolution.setEnabled (false);
 			
+                        //Selection nombre d'échantillon
 			switch(comboBoxNbE.getSelectedIndex()){
 			case 0:
 				getPan().setNbEchantillon(1);
@@ -238,6 +257,7 @@ public class Fenetre extends JFrame {
 				break;
 			}
 			
+                        //Selection nombre d'individus
 			switch(comboBoxNbI.getSelectedIndex()){
 			case 0:
 				getPan().setNbIndividu(10);
@@ -304,54 +324,52 @@ public class Fenetre extends JFrame {
                         
 			
 			
-		label1.setText("Vous avez cliqué sur le bouton Lancer");
-		System.out.println("Parametres d'execution : NbE = "+comboBoxNbE.getSelectedItem()+"  NbI : "+comboBoxNbI.getSelectedItem()+ "  Algo  " +comboBoxTypeResolution.getSelectedItem());
+                    label1.setText("Vous avez cliqué sur le bouton Lancer");
+                    System.out.println("Parametres d'execution : NbE = "+comboBoxNbE.getSelectedItem()+"  NbI : "+comboBoxNbI.getSelectedItem()+ "  Algo  " +comboBoxTypeResolution.getSelectedItem());
 
-		switch(comboBoxTypeResolution.getSelectedIndex()){
-		case 0:
-			getPan().BFS(3);
-			break;
+                    // Selection type de résolution
+                    switch(comboBoxTypeResolution.getSelectedIndex()){
+                    case 0:
+                            getPan().BFS(3);
+                            break;
+                    case 1:
+                            getPan().BFS(3);
+                            break;
+
+                    case 2:
+                            break;
+
+                    case 3:
+                            break;
+
+                    case 4:
+                            break;
+
+                    case 5:
+                            break;
+
+                    case 6:
+                            break;
+
+                    case 7:
+                            break;
+
+                    case 8:
+                            break;
+
+                    case 9:
+                            break;
+
+                    case 10:
+                            break;
+                    }
 		
-		
-		case 1:
-			getPan().BFS(3);
-			break;
-			
-		case 2:
-			break;
-			
-		case 3:
-			break;
-			
-		case 4:
-			break;
-			
-		case 5:
-			break;
-			
-		case 6:
-			break;
-			
-		case 7:
-			break;
-			
-		case 8:
-			break;
-			
-		case 9:
-			break;
-			
-		case 10:
-			break;
 		}
-		
-		}
-		}
+	}
 	
+        
+        //Appui bouton arreter
 	class BoutonArreterListener implements ActionListener{
-		/**
-		* Red�finition de la méthode actionPerformed
-		*/
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (true);
 			boutonArreter.setEnabled (false);
@@ -361,16 +379,17 @@ public class Fenetre extends JFrame {
 		label1.setText("Vous avez cliqué sur le bouton Arreter");
 		
 		}
-		}
+	}
 	
+        //Appui bouton Continuer
 	class BoutonContinuerListener implements ActionListener{
-		/**
-		* Red�finition de la m�thode actionPerformed
-		*/
+		
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (false);
 		label1.setText("Vous avez cliqué sur le bouton Continuer");
 
 		}
-		}
+	}
+        
+        
 }
