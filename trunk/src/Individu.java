@@ -3,14 +3,16 @@ public class Individu{
 
 	public char[][] map; //Matrice qui sera visualisée
 	
-	protected Chemin chemin = new Chemin();	// Chemin de l'individu
+	public Chemin chemin = new Chemin();	// Chemin de l'individu
 	
-	protected Labyrinthe labyrinthe=new Labyrinthe();
+	public Labyrinthe labyrinthe=new Labyrinthe();
 	
 	//Constructeur
 	public Individu(){
 		System.out.println("creation indi");
 		this.map=labyrinthe.murs;
+                int[][]  deplacement={{1,1}};
+                chemin.setDeplacement(deplacement);
 	}
 	
 	// Accesseurs
