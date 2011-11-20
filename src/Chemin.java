@@ -7,7 +7,7 @@ public class Chemin {
 	
 	// Constructeur
 	public Chemin(){
-		int i=0;
+		
 		deplacement=new int[200][2];
 		
 		deplacement[0][0]=1;

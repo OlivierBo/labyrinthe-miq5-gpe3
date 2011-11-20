@@ -7,6 +7,8 @@ public class Echantillon {
 	
 	private int tempsResolution; //Image du temps de résolution
 
+        private boolean resolu=false; // labyrinthe résolu sur l'échantillon
+        
 	//Constructeur
 	public Echantillon(int n){
 		System.out.println("Creation echantillon");
@@ -32,6 +34,11 @@ public class Echantillon {
 	public void setNbIndividu(int n){
 		this.nbIndividu=n;
 	}
+        
+        public void setIndividu(Individu individu[]){
+		this.individus=individu;
+                nbIndividu=individu.length;
+	}
 
 
 
@@ -45,4 +52,15 @@ public class Echantillon {
 		this.tempsResolution = tempsResolution;
 	}
 
+        public boolean getresolu() {
+		return resolu;
+	}
+
+
+
+	public void setresolu(boolean type) {
+		this.resolu=type;
+	}
+
+        
 }
