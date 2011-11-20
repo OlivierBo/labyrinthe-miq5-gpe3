@@ -197,6 +197,26 @@ import javax.swing.JPanel;
 		this.nbEchantillon = nbEchantillon;
 	}
 
+        public int getnumeroIndividuEncours() {
+		return nbEchantillon;
+	}
+
+
+
+	public void setnumeroIndividuEncours(int nbEchantillon) {
+		this.nbEchantillon = nbEchantillon;
+	}
+
+        
+                public int getnumeroEchantillonEncours() {
+		return nbEchantillon;
+	}
+
+
+
+	public void setnumeroEchantillonEncours(int nbEchantillon) {
+		this.nbEchantillon = nbEchantillon;
+	}
 
         /*
          * Définition des méthodes de résolution

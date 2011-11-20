@@ -32,4 +32,9 @@ public class N_echantillon {
 	public void setNbEchantillon(int n){
 		this.nbEchantillon=n;
 	}
+        
+        public void setEchantillon(Echantillon n_Echantillon[]){
+		n_echantillon=n_Echantillon;
+                nbEchantillon=n_Echantillon.length;
+	}
 }
