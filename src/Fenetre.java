@@ -32,6 +32,7 @@ public class Fenetre extends JFrame {
 	private JPanel south = new JPanel();
 	private JPanel north2 = new JPanel();
 	private JPanel north = new JPanel();
+        private JPanel west = new JPanel();
         
         //Jlabel : Ecriture de chaîne de caractères sur l'interface
         private JLabel label1 = new JLabel(""); 
@@ -61,7 +62,7 @@ public class Fenetre extends JFrame {
              Définition de la fenetre
              */
 		this.setTitle("Resolution Labyrinthe - Projet Informatique");
-		this.setSize(600, 720);
+		this.setSize(900, 525);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
@@ -76,15 +77,15 @@ public class Fenetre extends JFrame {
                 
                 //Définition de l'écoute des commandes
 		comboBoxNbE.addActionListener(new ItemActionNbE());
-		comboBoxNbE.setPreferredSize(new Dimension(60,20));
+		comboBoxNbE.setPreferredSize(new Dimension(60,30));
 		comboBoxNbE.setForeground (Color.blue);
 		
 		comboBoxNbI.addActionListener(new ItemActionNbI());
-		comboBoxNbI.setPreferredSize(new Dimension(60,20));
+		comboBoxNbI.setPreferredSize(new Dimension(60,30));
 		comboBoxNbI.setForeground (Color.blue);
 		
 		comboBoxTypeResolution.addActionListener(new ItemActionResol());
-		comboBoxTypeResolution.setPreferredSize(new Dimension(150,20));
+		comboBoxTypeResolution.setPreferredSize(new Dimension(150,30));
 		comboBoxTypeResolution.setForeground (Color.blue);
 		
 		boutonLancer.addActionListener(new BoutonLancerListener());
@@ -93,7 +94,7 @@ public class Fenetre extends JFrame {
 		
 		
 		// Placement des commandes du haut
-		north.setPreferredSize(new Dimension(600, 80));
+		north.setPreferredSize(new Dimension(400, 160));
 		north.setLayout(new GridLayout(3, 3 , 5 , 5));
 		north.add(new JLabel("Nombre d'échantillon"));
 		north.add(new JLabel("Nombre d'individus"));
@@ -108,15 +109,15 @@ public class Fenetre extends JFrame {
 		north.add(boutonContinuer);
 		
 		label1.setHorizontalAlignment(JLabel.CENTER );
-		label1.setPreferredSize(new Dimension(600,20));
-		north2.setPreferredSize(new Dimension(600, 100));
+		label1.setPreferredSize(new Dimension(400,20));
+		north2.setPreferredSize(new Dimension(400, 180));
 		north2.setLayout(new BorderLayout());
 		north2.add(label1 ,BorderLayout.NORTH);
 		north2.add(north, BorderLayout.SOUTH);
 		
 		//Placement des info du bas
-		south.setPreferredSize(new Dimension(600,100));
-		south.setLayout(new GridLayout(4, 4 , 5 , 5));
+		south.setPreferredSize(new Dimension(400,250));
+		south.setLayout(new GridLayout(8, 2 , 5 , 5));
 		south.add (new JLabel("Numéro Echantillon :"));
 		south.add(labelE);
 		south.add (new JLabel("Numéro Individu :"));
@@ -134,13 +135,17 @@ public class Fenetre extends JFrame {
 		south.add (new JLabel("Critère 2 :"));
 		south.add(labelC2);
 	
+                west.setPreferredSize(new Dimension(400, 100));
+		west.setLayout(new BorderLayout());
+		west.add(north2 ,BorderLayout.NORTH);
+                west.add(south ,BorderLayout.SOUTH);
 		
                 //Placement du labyrinthe au milieu et layout final
 		container.setBackground (Color.white);
 		container.setLayout(new BorderLayout());
-		container.add (north2, BorderLayout.NORTH);
+		container.add (west, BorderLayout.WEST);
 		container.add (pan, BorderLayout.CENTER );
-		container.add (south, BorderLayout.SOUTH);
+		//container.add (south, BorderLayout.SOUTH);
 
                 // Activer l'interface
 		this.setContentPane(container);
