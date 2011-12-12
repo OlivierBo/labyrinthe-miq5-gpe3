@@ -1,9 +1,12 @@
 
+
 public class Chemin {
 	
-	private int deplacement[][]; // Deplacement par coordonn�es 1er �l�ment : ligne ; 2nd �l�ment : colonne
+	private int[][] deplacement; // Deplacement par coordonn�es 1er �l�ment : ligne ; 2nd �l�ment : colonne
 	
 	private int nbcases; // Nombre de cases explor�es
+        
+        
 	
 	// Constructeur
 	public Chemin(){
@@ -51,5 +54,18 @@ public class Chemin {
 		this.deplacement = deplacement;
                 updateNbcase();
 	}
+        
+        public void AddDeplacement(int x, int y){
+            this.updateNbcase();
+            int[][] dep=new int[this.nbcases+1][2];
+            for(int i=0;i<deplacement.length;i++){
+             dep[i][0]= deplacement[i][0];
+             dep[i][1]= deplacement[i][1];
+            }
+            dep[this.nbcases][0]=x;
+            dep[this.nbcases][1]=y;
+            this.setDeplacement(dep);
+            this.updateNbcase();
+        }
 
 }
