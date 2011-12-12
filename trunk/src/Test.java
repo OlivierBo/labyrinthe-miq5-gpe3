@@ -9,7 +9,7 @@ public class Test {
 		
 		
 		
-		// Test du fonctionnement des classes
+		//////// Test du fonctionnement des classes////////
 		
 		System.out.println("test deplacement");
                 System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getNbcases());
@@ -36,8 +36,82 @@ public class Test {
 		boolean a2=fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().existeDeja(9, 4);
 		
 		System.out.println("Test case existante :"+a1+a2);
-		
-		
+                
+                try {
+			Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                
+                
+                
+                System.out.println("Test ajout de case dans le déplacement :");
+                System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getNbcases());
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(9, 3);
+                System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getDeplacement()[14][1]);
+		System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getNbcases());
+                System.out.println("----------");
+		fenetre.getPan().repaint();
+                
+                // Animation basique
+                try {
+			Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(9, 2);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(9, 1);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(10, 1);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(11, 1);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(12, 1);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(13, 1);
+                fenetre.getPan().repaint();
+                try {
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(13, 2);
+                fenetre.getPan().repaint();
+                System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getNbcases());
 	}
 
 }
