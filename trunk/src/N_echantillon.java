@@ -3,7 +3,7 @@ public class N_echantillon {
 
 	private Echantillon n_echantillon[];
 	
-	int nbEchantillon;
+	private int nbEchantillon;
 
 
 	

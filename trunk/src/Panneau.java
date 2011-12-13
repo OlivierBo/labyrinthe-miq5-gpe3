@@ -53,17 +53,17 @@ import javax.swing.JPanel;
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
                 // 2 boucles for imbriquées pour parcourir et dessiner le labyrinthe
-		for (int x=0; x<n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.n(); x++){
-			for (int y=0; y<n_echantillon.getEchantillon(1).getIndividu(numeroIndividu).labyrinthe.n(); y++) {
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.estMur(x,y)) {
+		for (int x=0; x<n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().n(); x++){
+			for (int y=0; y<n_echantillon.getEchantillon(1).getIndividu(numeroIndividu).getLabyrinthe().n(); y++) {
+				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estMur(x,y)) {
 				    g.setColor(Color.gray);
 				    g.fillRect(x*c, y*c, c, c);
 				}
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.estDepart(x,y)) {
+				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estDepart(x,y)) {
 				    g.setColor(Color.green);
 				    g.fillRect(x*c, y*c, c, c);
 				}
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).labyrinthe.estArrivee(x,y)) {
+				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estArrivee(x,y)) {
 				    g.setColor(Color.red);
 				    g.fillRect(x*c, y*c, c, c);
 				 
