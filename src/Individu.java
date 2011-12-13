@@ -2,9 +2,9 @@
 public class Individu{
 
 	
-	public Chemin chemin = new Chemin();	// Chemin de l'individu
+	private Chemin chemin = new Chemin();	// Chemin de l'individu
 	
-        public Labyrinthe labyrinthe=new Labyrinthe(); //Matrice qui sera visualisée
+        private Labyrinthe labyrinthe=new Labyrinthe(); //Matrice qui sera visualisée
 	
 	//Constructeur
 	public Individu(){ 
@@ -16,8 +16,13 @@ public class Individu{
 	// Accesseurs
 	public Chemin getChemin(){
 		return chemin;
-		
 	}
+        
+        public Labyrinthe getLabyrinthe(){
+            return labyrinthe;
+        }
+        
+        
 
 	
 }

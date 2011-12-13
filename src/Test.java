@@ -26,6 +26,8 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			}
+                System.out.println("Test detection des murs voisins :");
+                System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getLabyrinthe().estMursVoisins(1, 1));              
 		int[][] dep2={{1,1},{2,1},{3,1},{3,2},{3,3},{4,3},{5,3},{6,3},{7,3},{7,4},{7,5},{8,5},{9,5},{9,4}};
 		fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().setDeplacement(dep2);
 		fenetre.getPan().repaint();
