@@ -114,6 +114,19 @@ public class Test {
                 fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().AddDeplacement(13, 2);
                 fenetre.getPan().repaint();
                 System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getChemin().getNbcases());
-	}
+	
+                System.out.println("Test distance à l'arrivée");
+                System.out.println(fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).distance(13, 2));
+                
+                System.out.println("Test liste des coordonnées des murs");
+                fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getLabyrinthe().doListMurs();
+                int[][] lmurs=fenetre.getPan().getN_Echantillon().getEchantillon(1).getIndividu(1).getLabyrinthe().getListeMurs();
+                for(int i=0;i<lmurs.length;i++){
+                    System.out.println(lmurs[i][0]);
+                    System.out.println(lmurs[i][1]);
+                    System.out.println("------");
+                }
+        
+        }
 
 }

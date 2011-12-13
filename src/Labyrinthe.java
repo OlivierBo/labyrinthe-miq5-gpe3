@@ -75,6 +75,10 @@ public class Labyrinthe {
 	return murs.length; 
     }
     
+    public int[][] getListeMurs(){
+        return listeMurs;
+    }
+    
     public int estMursVoisins(int x, int y){
         int resultat=0;
         if((x+1)<n()){ //Test à l'Est
@@ -101,17 +105,26 @@ public class Labyrinthe {
     }
     
     public void doListMurs(){
-        int[][] l=new int[1][1];
+        
         int t=0;
         for(int i=0;i<n();i++){
             for(int j=0;j<n();j++){
                 if(estMur(i,j)){
-                    l=new int[t+1][t+1];
-                    l[t][0]=i;
-                    l[t][1]=j;
                     t++;
                 }
             }
         }
+        int[][] l=new int[t][2];
+        int t2=0;
+        for(int i=0;i<n();i++){
+            for(int j=0;j<n();j++){
+                if(estMur(i,j)){
+                    l[t2][0]=i;
+                    l[t2][1]=j;
+                    t2++;
+                }
+            }
+        }
+        listeMurs=l;
     }
 }
