@@ -33,6 +33,7 @@ public class Fenetre extends JFrame {
 	private JPanel north2 = new JPanel();
 	private JPanel north = new JPanel();
         private JPanel west = new JPanel();
+        private JPanel west2 = new JPanel();
         
         //Jlabel : Ecriture de chaîne de caractères sur l'interface
         private JLabel label1 = new JLabel(""); 
@@ -62,7 +63,7 @@ public class Fenetre extends JFrame {
              Définition de la fenetre
              */
 		this.setTitle("Resolution Labyrinthe - Projet Informatique");
-		this.setSize(900, 525);
+		this.setSize(1000, 525);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
@@ -109,14 +110,14 @@ public class Fenetre extends JFrame {
 		north.add(boutonContinuer);
 		
 		label1.setHorizontalAlignment(JLabel.CENTER );
-		label1.setPreferredSize(new Dimension(400,20));
-		north2.setPreferredSize(new Dimension(400, 180));
+		label1.setPreferredSize(new Dimension(500,20));
+		north2.setPreferredSize(new Dimension(500, 180));
 		north2.setLayout(new BorderLayout());
 		north2.add(label1 ,BorderLayout.NORTH);
 		north2.add(north, BorderLayout.SOUTH);
 		
 		//Placement des info du bas
-		south.setPreferredSize(new Dimension(400,250));
+		south.setPreferredSize(new Dimension(500,250));
 		south.setLayout(new GridLayout(8, 2 , 5 , 5));
 		south.add (new JLabel("Numéro Echantillon :"));
 		south.add(labelE);
@@ -135,10 +136,12 @@ public class Fenetre extends JFrame {
 		south.add (new JLabel("Critère 2 :"));
 		south.add(labelC2);
 	
-                west.setPreferredSize(new Dimension(400, 100));
+                west.setPreferredSize(new Dimension(500, 100));
+                west2.setPreferredSize(new Dimension(100, 100));
 		west.setLayout(new BorderLayout());
 		west.add(north2 ,BorderLayout.NORTH);
-                west.add(south ,BorderLayout.SOUTH);
+                west.add(west2 ,BorderLayout.WEST);
+                west.add(south ,BorderLayout.CENTER);
 		
                 //Placement du labyrinthe au milieu et layout final
 		container.setBackground (Color.white);

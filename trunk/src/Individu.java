@@ -1,4 +1,5 @@
 
+
 public class Individu{
 
 	
@@ -22,7 +23,11 @@ public class Individu{
             return labyrinthe;
         }
         
-        
+        public int distance(int x, int y){
+            int distance=0;
+            distance=Math.abs(x-13)+Math.abs(y-13);
+            return distance;
+        }
 
 	
 }

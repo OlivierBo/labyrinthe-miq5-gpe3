@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 	private float pourcentageReussite;
 	private float critere1;
 	private float critere2;
+        private Individu individu_afficher;
 	
         /*
          * Constructeurs
@@ -33,6 +34,7 @@ import javax.swing.JPanel;
         numeroIndividuEncours=1;
 	numeroEchantillonEncours=1;
 	n_echantillon=new N_echantillon(1,1);
+        individu_afficher=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu); // Par défaut on affiche le premier individu
 	}
 	
 	public Panneau(int nbE , int nbI){	
@@ -53,17 +55,17 @@ import javax.swing.JPanel;
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
                 // 2 boucles for imbriquées pour parcourir et dessiner le labyrinthe
-		for (int x=0; x<n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().n(); x++){
-			for (int y=0; y<n_echantillon.getEchantillon(1).getIndividu(numeroIndividu).getLabyrinthe().n(); y++) {
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estMur(x,y)) {
+		for (int x=0; x<individu_afficher.getLabyrinthe().n(); x++){
+			for (int y=0; y<individu_afficher.getLabyrinthe().n(); y++) {
+				if (individu_afficher.getLabyrinthe().estMur(x,y)) {
 				    g.setColor(Color.gray);
 				    g.fillRect(x*c, y*c, c, c);
 				}
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estDepart(x,y)) {
+				if (individu_afficher.getLabyrinthe().estDepart(x,y)) {
 				    g.setColor(Color.green);
 				    g.fillRect(x*c, y*c, c, c);
 				}
-				if (n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getLabyrinthe().estArrivee(x,y)) {
+				if (individu_afficher.getLabyrinthe().estArrivee(x,y)) {
 				    g.setColor(Color.red);
 				    g.fillRect(x*c, y*c, c, c);
 				 
@@ -71,9 +73,9 @@ import javax.swing.JPanel;
 			}
 		}
                 // On prend le déplacement de l'individu et on le dessine
-		int[][] dep=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getDeplacement();
-		n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().updateNbcase();
-		int ndep=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu).getChemin().getNbcases();
+		int[][] dep=individu_afficher.getChemin().getDeplacement();
+		individu_afficher.getChemin().updateNbcase();
+		int ndep=individu_afficher.getChemin().getNbcases();
 		int xd;
 		int yd;
 		g.setColor(Color.blue);
@@ -217,6 +219,14 @@ import javax.swing.JPanel;
 	public void setnumeroEchantillonEncours(int nbEchantillon) {
 		this.nbEchantillon = nbEchantillon;
 	}
+        
+        public void setIndividu_afficher(Individu ind) {
+		this.individu_afficher = ind;
+	}
+        
+        public Individu getIndividu_afficher(){
+            return this.individu_afficher;
+        }
 
         /*
          * Définition des méthodes de résolution
