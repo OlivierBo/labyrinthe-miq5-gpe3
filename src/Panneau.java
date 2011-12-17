@@ -233,9 +233,12 @@ import javax.swing.JPanel;
          */
 
 	@Override
-	public void BFS(int nbIndividu) {
-		
-		
+	public void BFS() {
+	 Individu id_BFS=new Individu();
+         id_BFS.getChemin().AddDeplacement(2, 1);
+         setIndividu_afficher(id_BFS);
+         repaint();
+         
 	}
 
 

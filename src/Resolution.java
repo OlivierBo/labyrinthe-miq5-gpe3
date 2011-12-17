@@ -1,7 +1,7 @@
 
 public interface Resolution {
 
-	public void BFS(int nbIndividu);
+	public void BFS();
 	public void DFS(int nbIndividu);
 	public void AlgorithmeGreedy(int nbIndividu);
 	public void AlgorithmeA(int nbIndividu);
