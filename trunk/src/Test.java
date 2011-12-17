@@ -6,8 +6,10 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		Fenetre fenetre = new Fenetre();
-		
-		
+		//fenetre.getPan().BFS();
+                
+                /*
+		//----------------TESTS DES FONCTIONS ------------------//
 		
 		//////// Test du fonctionnement des classes////////
 		
@@ -126,7 +128,7 @@ public class Test {
                     System.out.println(lmurs[i][1]);
                     System.out.println("------");
                 }
-        
+        //*/
         }
 
 }

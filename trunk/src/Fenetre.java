@@ -18,9 +18,9 @@ public class Fenetre extends JFrame {
 	private Panneau pan = new Panneau();
         
         // JComboBox : listes déroulantes
-	private JComboBox comboBoxNbE = new JComboBox(); 
-	private JComboBox comboBoxNbI = new JComboBox();
-	private JComboBox comboBoxTypeResolution = new JComboBox();
+	private JComboBox<String> comboBoxNbE = new JComboBox<>(); 
+	private JComboBox<String> comboBoxNbI = new JComboBox<>();
+	private JComboBox<String> comboBoxTypeResolution = new JComboBox<>();
         
         //JButton : Bouton
 	private JButton boutonLancer = new JButton("Lancer");   
@@ -72,9 +72,9 @@ public class Fenetre extends JFrame {
 		String[] listeI={"10","20","30","40","50","60","70","80","90","100","110","120","130","140","150","160","170","180","190","200"};
 		String[] listeResol ={"DFS","BFS","Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques","Algorithme de colonies de fourmis", "Logique de prpositions","Logique de prédicats"};
 		
-		comboBoxNbE = new JComboBox(listeE);
-		comboBoxNbI = new JComboBox(listeI);
-		comboBoxTypeResolution = new JComboBox(listeResol);
+		comboBoxNbE = new JComboBox<>(listeE);
+		comboBoxNbI = new JComboBox<>(listeI);
+		comboBoxTypeResolution = new JComboBox<>(listeResol);
                 
                 //Définition de l'écoute des commandes
 		comboBoxNbE.addActionListener(new ItemActionNbE());
@@ -338,10 +338,10 @@ public class Fenetre extends JFrame {
                     // Selection type de résolution
                     switch(comboBoxTypeResolution.getSelectedIndex()){
                     case 0:
-                            getPan().BFS(3);
+                            getPan().BFS();
                             break;
                     case 1:
-                            getPan().BFS(3);
+                            getPan().BFS();
                             break;
 
                     case 2:
