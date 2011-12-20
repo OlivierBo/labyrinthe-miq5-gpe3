@@ -8,7 +8,7 @@ public class Test {
 		Fenetre fenetre = new Fenetre();
 		//fenetre.getPan().BFS();
                 
-                //*
+                /*
 		//----------------TESTS DES FONCTIONS ------------------//
 		
 		//////// Test du fonctionnement des classes////////
