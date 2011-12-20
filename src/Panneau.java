@@ -7,43 +7,41 @@ import javax.swing.JPanel;
 
 	public class Panneau extends JPanel implements Resolution{
 
-	private N_echantillon n_echantillon=new N_echantillon(1,1);
+            // Variables pour chaques algorithmes
+        private Individu id_DFS=new Individu();
+        private Individu id_BFS=new Individu();
+        private Individu id_greedy=new Individu();
+        private Individu id_A=new Individu();
+        private Individu id_escalade=new Individu();
+        private Individu id_tabous=new Individu();
+        private Echantillon echantillon_recuit=new Echantillon(1);
+        private N_echantillon n_echantillon_genetique=new N_echantillon(1,1);    
+	private N_echantillon n_echantillon_fourmis=new N_echantillon(1,1);
+        
+        
+        
+        
+            //Autres variables
 	private int c=32; // Taille cellule
-	private int nbIndividu;
-	private int nbEchantillon;
-	private int numeroIndividu;
-	private int numeroEchantillon;
-        private int numeroIndividuEncours;
-	private int numeroEchantillonEncours;
-	private float distanceCible=(float) 0.0;
-	private int caseExplorees;
+        private int nbIndividu;
+      	private int nbEchantillon;
+
+   
+        private int numeroIndividuEncours=1;
+	private int numeroEchantillonEncours=1;
+        
+        
+            // Variables de sorties d'algorithme pour comparaison
 	private float moyenneTempsResolution;
 	private float pourcentageReussite;
 	private float critere1;
 	private float critere2;
-        private Individu individu_afficher;
+        
+            // Variable de l'individu à afficher
+        private Individu individu_afficher=id_DFS; // id_DFS par défaut
 	
-        /*
-         * Constructeurs
-         */
-	public Panneau(){	
-	nbIndividu=1;
-	nbEchantillon=1;
-	numeroIndividu=1;
-	numeroEchantillon=1;
-        numeroIndividuEncours=1;
-	numeroEchantillonEncours=1;
-	n_echantillon=new N_echantillon(1,1);
-        individu_afficher=n_echantillon.getEchantillon(numeroEchantillon).getIndividu(numeroIndividu); // Par défaut on affiche le premier individu
-	}
+
 	
-	public Panneau(int nbE , int nbI){	
-		nbIndividu=nbI;
-		nbEchantillon=nbE;
-		numeroIndividu=1;
-		numeroEchantillon=1;
-		n_echantillon=new N_echantillon(nbE,nbI);
-		}
 	
         /*
          Dessin du labyrinthe
@@ -91,142 +89,11 @@ import javax.swing.JPanel;
 		    
 	}
         
-        /*
-         * Accesseurs
-         */
-	public N_echantillon getN_Echantillon(){
-		return n_echantillon;
-	}
+       
 
-	public int getNbIndividu() {
-		return nbIndividu;
-	}
-
-
-	public void setNbIndividu(int nbIndividu) {
-		this.nbIndividu = nbIndividu;
-	}
-
-
-	public int getNumeroIndividu() {
-		return numeroIndividu;
-	}
-
-
-	public void setNumeroIndividu(int numeroIndividu) {
-		this.numeroIndividu = numeroIndividu;
-	}
-
-
-	public int getNumeroEchantillon() {
-		return numeroEchantillon;
-	}
-
-
-	public void setNumeroEchantillon(int numeroEchantillon) {
-		this.numeroEchantillon = numeroEchantillon;
-	}
-
-
-	public float getDistanceCible() {
-		return distanceCible;
-	}
-
-
-	public void setDistanceCible(float distanceCible) {
-		this.distanceCible = distanceCible;
-	}
-
-
-	public int getCaseExplorees() {
-		return caseExplorees;
-	}
-
-
-	public void setCaseExplorees(int caseExplorees) {
-		this.caseExplorees = caseExplorees;
-	}
-
-
-	public float getMoyenneTempsResolution() {
-		return moyenneTempsResolution;
-	}
-
-
-	public void setMoyenneTempsResolution(float moyenneTempsResolution) {
-		this.moyenneTempsResolution = moyenneTempsResolution;
-	}
-
-
-	public float getPourcentageReussite() {
-		return pourcentageReussite;
-	}
-
-
-	public void setPourcentageReussite(float pourcentageReussite) {
-		this.pourcentageReussite = pourcentageReussite;
-	}
-
-
-	public float getCritere1() {
-		return critere1;
-	}
-
-
-	public void setCritere1(float critere1) {
-		this.critere1 = critere1;
-	}
-
-
-	public float getCritere2() {
-		return critere2;
-	}
-
-
-	public void setCritere2(float critere2) {
-		this.critere2 = critere2;
-	}
-
-
-
-	public int getNbEchantillon() {
-		return nbEchantillon;
-	}
-
-
-
-	public void setNbEchantillon(int nbEchantillon) {
-		this.nbEchantillon = nbEchantillon;
-	}
-
-        public int getnumeroIndividuEncours() {
-		return nbEchantillon;
-	}
-
-
-
-	public void setnumeroIndividuEncours(int nbEchantillon) {
-		this.nbEchantillon = nbEchantillon;
-	}
 
         
-                public int getnumeroEchantillonEncours() {
-		return nbEchantillon;
-	}
-
-
-
-	public void setnumeroEchantillonEncours(int nbEchantillon) {
-		this.nbEchantillon = nbEchantillon;
-	}
-        
-        public void setIndividu_afficher(Individu ind) {
-		this.individu_afficher = ind;
-	}
-        
-        public Individu getIndividu_afficher(){
-            return this.individu_afficher;
-        }
+      
 
         /*
          * Définition des méthodes de résolution
@@ -234,7 +101,6 @@ import javax.swing.JPanel;
 
 	@Override
 	public void BFS() {
-	 Individu id_BFS=new Individu();
          id_BFS.getChemin().AddDeplacement(2, 1);
          setIndividu_afficher(id_BFS);
          repaint();
@@ -244,7 +110,7 @@ import javax.swing.JPanel;
 
 
 	@Override
-	public void DFS(int nbIndividu) {
+	public void DFS() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -252,7 +118,7 @@ import javax.swing.JPanel;
 
 
 	@Override
-	public void AlgorithmeGreedy(int nbIndividu) {
+	public void AlgorithmeGreedy() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -260,7 +126,7 @@ import javax.swing.JPanel;
 
 
 	@Override
-	public void AlgorithmeA(int nbIndividu) {
+	public void AlgorithmeA() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -321,6 +187,172 @@ import javax.swing.JPanel;
 		
 	}
 	
+        
+         /*
+         * Accesseurs
+         */
+        
+         public void setIndividu_afficher(Individu ind) {
+		this.individu_afficher = ind;
+	}
+        
+        public Individu getIndividu_afficher(){
+            return this.individu_afficher;
+        }
+        
+        public int getC() {
+            return c;
+        }
+
+        public void setC(int c) {
+            this.c = c;
+        }
+
+        public Echantillon getEchantillon_recuit() {
+            return echantillon_recuit;
+        }
+
+        public void setEchantillon_recuit(Echantillon echantillon_recuit) {
+            this.echantillon_recuit = echantillon_recuit;
+        }
+
+        public Individu getId_A() {
+            return id_A;
+        }
+
+        public void setId_A(Individu id_A) {
+            this.id_A = id_A;
+        }
+
+        public Individu getId_BFS() {
+            return id_BFS;
+        }
+
+        public void setId_BFS(Individu id_BFS) {
+            this.id_BFS = id_BFS;
+        }
+
+        public Individu getId_DFS() {
+            return id_DFS;
+        }
+
+        public void setId_DFS(Individu id_DFS) {
+            this.id_DFS = id_DFS;
+        }
+
+        public Individu getId_escalade() {
+            return id_escalade;
+        }
+
+        public void setId_escalade(Individu id_escalade) {
+            this.id_escalade = id_escalade;
+        }
+
+        public Individu getId_greedy() {
+            return id_greedy;
+        }
+
+        public void setId_greedy(Individu id_greedy) {
+            this.id_greedy = id_greedy;
+        }
+
+        public Individu getId_tabous() {
+            return id_tabous;
+        }
+
+        public void setId_tabous(Individu id_tabous) {
+            this.id_tabous = id_tabous;
+        }
+
+        public N_echantillon getN_echantillon_fourmis() {
+            return n_echantillon_fourmis;
+        }
+
+        public void setN_echantillon_fourmis(N_echantillon n_echantillon_fourmis) {
+            this.n_echantillon_fourmis = n_echantillon_fourmis;
+        }
+
+        public N_echantillon getN_echantillon_genetique() {
+            return n_echantillon_genetique;
+        }
+
+        public void setN_echantillon_genetique(N_echantillon n_echantillon_genetique) {
+            this.n_echantillon_genetique = n_echantillon_genetique;
+        }
+
+        public int getNbEchantillon() {
+            return nbEchantillon;
+        }
+
+        public void setNbEchantillon(int nbEchantillon) {
+            this.nbEchantillon = nbEchantillon;
+        }
+
+        public int getNbIndividu() {
+            return nbIndividu;
+        }
+
+        public void setNbIndividu(int nbIndividu) {
+            this.nbIndividu = nbIndividu;
+        }
+
+        public int getNumeroEchantillonEncours() {
+            return numeroEchantillonEncours;
+        }
+
+        public void setNumeroEchantillonEncours(int numeroEchantillonEncours) {
+            this.numeroEchantillonEncours = numeroEchantillonEncours;
+        }
+
+        public int getNumeroIndividuEncours() {
+            return numeroIndividuEncours;
+        }
+
+        public void setNumeroIndividuEncours(int numeroIndividuEncours) {
+            this.numeroIndividuEncours = numeroIndividuEncours;
+        }
+
+
+	public float getMoyenneTempsResolution() {
+		return moyenneTempsResolution;
+	}
+
+
+	public void setMoyenneTempsResolution(float moyenneTempsResolution) {
+		this.moyenneTempsResolution = moyenneTempsResolution;
+	}
+
+
+	public float getPourcentageReussite() {
+		return pourcentageReussite;
+	}
+
+
+	public void setPourcentageReussite(float pourcentageReussite) {
+		this.pourcentageReussite = pourcentageReussite;
+	}
+
+
+	public float getCritere1() {
+		return critere1;
+	}
+
+
+	public void setCritere1(float critere1) {
+		this.critere1 = critere1;
+	}
+
+
+	public float getCritere2() {
+		return critere2;
+	}
+
+
+	public void setCritere2(float critere2) {
+		this.critere2 = critere2;
+	}
+
+
 
 	
 }

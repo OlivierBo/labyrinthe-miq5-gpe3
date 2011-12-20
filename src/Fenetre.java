@@ -54,7 +54,7 @@ public class Fenetre extends JFrame {
 	private Thread t;
 	
         
-        /*
+        /**
          Constructeur
          */
 	public Fenetre(){
@@ -155,7 +155,7 @@ public class Fenetre extends JFrame {
 		this.setVisible(true);
 	}
 
-        /*
+        /**
          Dessiner toutes les n itération le meilleur résultat
          */
 	public void meilleurIndividu(Panneau panneau){
@@ -185,7 +185,9 @@ public class Fenetre extends JFrame {
 	}
 
 
-
+        /**
+        Renvoie le panneau
+        */
 	public Panneau getPan() {
 		return pan;
 	}
@@ -328,49 +330,69 @@ public class Fenetre extends JFrame {
 				getPan().setNbIndividu(200);
 				break;
 			}
-                        
-                        
-			
-			
-                    label1.setText("Vous avez cliqué sur le bouton Lancer");
-                    System.out.println("Parametres d'execution : NbE = "+comboBoxNbE.getSelectedItem()+"  NbI : "+comboBoxNbI.getSelectedItem()+ "  Algo  " +comboBoxTypeResolution.getSelectedItem());
+                        	
 
                     // Selection type de résolution
                     switch(comboBoxTypeResolution.getSelectedIndex()){
                     case 0:
-                            getPan().BFS();
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
+                            getPan().DFS();
                             break;
                     case 1:
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
                             getPan().BFS();
                             break;
 
                     case 2:
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
+                            getPan().AlgorithmeGreedy();
                             break;
 
                     case 3:
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
+                            getPan().AlgorithmeA();
                             break;
 
                     case 4:
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
+                            getPan().Escalade();
                             break;
 
                     case 5:
+                            getPan().setNbEchantillon(1);
+                            getPan().setNbIndividu(1);
+                            getPan().RechercheAvecTabous();
                             break;
 
                     case 6:
+                            getPan().setNbEchantillon(1);
+                            getPan().RecuitSimule();
                             break;
 
                     case 7:
+                            getPan().AlgorithmeGenetique();
                             break;
 
                     case 8:
+                            getPan().AlgorithmeColonieFourmis();
                             break;
 
                     case 9:
+                            getPan().LogiqueDeProposition();
                             break;
 
                     case 10:
+                            getPan().LogiqueDePredicats();
                             break;
                     }
+                    
+                   label1.setText("Vous avez cliqué sur le bouton Lancer");
+                   System.out.println("Parametres d'execution :   Algo " +comboBoxTypeResolution.getSelectedItem()+ " ; NbI =  " + getPan().getNbIndividu() + " ; NbE = " + getPan().getNbEchantillon());
 		
 		}
 	}

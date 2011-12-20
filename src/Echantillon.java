@@ -4,8 +4,6 @@ public class Echantillon {
 	private Individu individus[]; // Tableau des individus de l'echantillon
 	
 	private int nbIndividu; // Nombre d'individu dans l'echantillon
-	
-	private int tempsResolution; //Image du temps de résolution
 
         private boolean resolu=false; // labyrinthe résolu sur l'échantillon
         
@@ -17,7 +15,6 @@ public class Echantillon {
 			individus[i] = new Individu();	
 			}
 		nbIndividu=n;
-		tempsResolution=0;
 	}
 	
 	
@@ -40,17 +37,6 @@ public class Echantillon {
                 nbIndividu=individu.length;
 	}
 
-
-
-	public int getTempsResolution() {
-		return tempsResolution;
-	}
-
-
-
-	public void setTempsResolution(int tempsResolution) {
-		this.tempsResolution = tempsResolution;
-	}
 
         public boolean getresolu() {
 		return resolu;

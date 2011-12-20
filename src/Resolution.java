@@ -2,9 +2,9 @@
 public interface Resolution {
 
 	public void BFS();
-	public void DFS(int nbIndividu);
-	public void AlgorithmeGreedy(int nbIndividu);
-	public void AlgorithmeA(int nbIndividu);
+	public void DFS();
+	public void AlgorithmeGreedy();
+	public void AlgorithmeA();
 	public void Escalade();
 	public void RechercheAvecTabous();
 	public void RecuitSimule();
