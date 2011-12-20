@@ -13,7 +13,7 @@ import javax.swing.JPanel;
         private Individu id_greedy=new Individu();
         private Individu id_A=new Individu();
         private Individu id_escalade=new Individu();
-        private Individu id_tabous=new Individu();
+        private Echantillon echantillon_tabous=new Echantillon(1);
         private Echantillon echantillon_recuit=new Echantillon(1);
         private N_echantillon n_echantillon_genetique=new N_echantillon(1,1);    
 	private N_echantillon n_echantillon_fourmis=new N_echantillon(1,1);
@@ -135,7 +135,53 @@ import javax.swing.JPanel;
 
 	@Override
 	public void Escalade() {
-		// TODO Auto-generated method stub
+            // Initialisation
+		id_escalade=new Individu();
+                boolean solution=false;
+                boolean bloque=false;
+                int x=1;
+                int y=1;
+                int distance=id_escalade.distance(x, y);
+               
+            // Boucle pour le déplacement    
+                while((solution==false)&&(bloque==false)){
+                    // Recherche du meilleur voisin
+                    if(!id_escalade.getLabyrinthe().estMur(x+1, y)&&(distance>id_escalade.distance(x+1, y))){ // Test à l'Est
+                        x=x+1; 
+                        id_escalade.getChemin().AddDeplacement(x, y);
+                    }
+                        else if(!id_escalade.getLabyrinthe().estMur(x, y+1)&&(distance>id_escalade.distance(x, y+1))){
+                            y=y+1; 
+                            id_escalade.getChemin().AddDeplacement(x, y);
+                            }
+                            else if(!id_escalade.getLabyrinthe().estMur(x-1, y)&&(distance>id_escalade.distance(x-1, y))){
+                                x=x-1; 
+                                id_escalade.getChemin().AddDeplacement(x, y);
+                                }
+                                else if(!id_escalade.getLabyrinthe().estMur(x, y-1)&&(distance>id_escalade.distance(x, y-1))){
+                                   y=y-1;   
+                                   id_escalade.getChemin().AddDeplacement(x, y);
+                                }
+
+                    // Test bloque
+                    if(distance==id_escalade.distance(x, y)){
+                        bloque=true;
+                    }
+                    else{
+                        // Calcul de la distance
+                        distance=id_escalade.distance(x, y);   
+                    }
+                     //Test solution
+                    solution=id_escalade.getLabyrinthe().estArrivee(x, y);
+                    
+                    
+                }
+                
+            // Affichage du résultat
+                setIndividu_afficher(id_escalade);
+                repaint();
+                System.out.println(" bloqué = "+ bloque + " ; solution = "+ solution);
+                
 		
 	}
 
@@ -143,9 +189,95 @@ import javax.swing.JPanel;
 
 	@Override
 	public void RechercheAvecTabous() {
-		// TODO Auto-generated method stub
+                //Initialisation
+		echantillon_tabous=new Echantillon(nbIndividu);
+                boolean solution=false;
+                boolean bloque=false;
+                int x=1;
+                int y=1;
+                int x_dest=x;
+                int y_dest=y;
+                int distance_Est=0;
+                int distance_Sud=0;
+                int distance_Ouest=0;
+                int distance_Nord=0;
+                int distance=0;
+                
+                // Boucle d'execution de l'algorithme pour chaque individu
+            for(int i=0; i<echantillon_tabous.getNbIndividu();i++){
+                // Boucle de résolution
+                while((solution==false)&&(bloque==false)){
+                    if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x+1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x+1, y))){
+                        distance_Est=echantillon_tabous.getIndividu(i+1).distance(x+1, y);
+                        x_dest=x+1;
+                        y_dest=y;
+                        distance=distance_Est;
+                    }
+                    else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y+1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y+1))){
+                        distance_Sud=echantillon_tabous.getIndividu(i+1).distance(x, y+1);
+                            if(distance_Sud<distance){
+                                x_dest=x;
+                                y_dest=y+1;
+                                distance=distance_Sud;
+                            }
+                            if(distance_Sud==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x;
+                                   y_dest=y+1;
+                                   distance=distance_Sud; 
+                                }
+                            }  
+                        }
+                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x-1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x-1, y))){
+                        distance_Ouest=echantillon_tabous.getIndividu(i+1).distance(x-1, y);
+                            if(distance_Ouest<distance){
+                                x_dest=x-1;
+                                y_dest=y;
+                                distance=distance_Ouest;
+                            }
+                            if(distance_Ouest==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x-1;
+                                   y_dest=y;
+                                   distance=distance_Ouest; 
+                                }
+                            }   
+                        }
+                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y-1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y-1))){
+                        distance_Nord=echantillon_tabous.getIndividu(i+1).distance(x, y-1);
+                            if(distance_Nord<distance){
+                                x_dest=x;
+                                y_dest=y-1;
+                                distance=distance_Nord;
+                            }
+                            if(distance_Nord==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x;
+                                   y_dest=y-1;
+                                   distance=distance_Nord; 
+                                }
+                            }   
+                        }
+                
+                    // Test bloque
+                    if(distance==echantillon_tabous.getIndividu(i+1).distance(x, y)){
+                        bloque=true;
+                    }
+                    
+                     //Test solution
+                    solution=echantillon_tabous.getIndividu(i+1).getLabyrinthe().estArrivee(x, y);
+                     
+                }
+            }
+               // int distance=id_escalade.distance(x, y);
+            
+        }
+                
 		
-	}
+	
 
 
 
@@ -256,12 +388,12 @@ import javax.swing.JPanel;
             this.id_greedy = id_greedy;
         }
 
-        public Individu getId_tabous() {
-            return id_tabous;
+        public Echantillon getId_tabous() {
+            return echantillon_tabous;
         }
 
-        public void setId_tabous(Individu id_tabous) {
-            this.id_tabous = id_tabous;
+        public void setId_tabous(Echantillon e_tabous) {
+            this.echantillon_tabous = e_tabous;
         }
 
         public N_echantillon getN_echantillon_fourmis() {
@@ -352,7 +484,9 @@ import javax.swing.JPanel;
 		this.critere2 = critere2;
 	}
 
-
+        public double round(double f, int i){
+            return (double)((int)(f*Math.pow(10,i)+0.5))/Math.pow(10, i);       
+                    }
 
 	
 }
