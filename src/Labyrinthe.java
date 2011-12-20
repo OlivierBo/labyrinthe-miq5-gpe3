@@ -79,28 +79,28 @@ public class Labyrinthe {
         return listeMurs;
     }
     
-    public int estMursVoisins(int x, int y){
+    public int estVoisins(int x, int y){
         int resultat=0;
-        if((x+1)<n()){ //Test à l'Est
-            if(estMur(x+1,y)){
+        //Test à l'Est
+            if(!estMur(x+1,y)){
                 resultat=resultat+1;
             }
-        }
-        if((y+1)>=n()){ //Test au Sud
-            if(estMur(x,y+1)){
+        
+         //Test au Sud
+            if(!estMur(x,y+1)){
                 resultat=resultat+10;
             }
-        }
-        if((x-1)>=0){  //Test à l'Ouest
-            if(estMur(x-1,y)){
+        
+          //Test à l'Ouest
+            if(!estMur(x-1,y)){
                 resultat=resultat+100;
             }
-        }
-        if((y-1)>=0){  //Test au Nord
-            if(estMur(x,y-1)){
+        
+          //Test au Nord
+            if(!estMur(x,y-1)){
                 resultat=resultat+1000;
             }
-        }
+        
         return resultat;
     }
     
