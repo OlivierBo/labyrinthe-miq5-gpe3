@@ -8,20 +8,33 @@ public class Individu{
         private Labyrinthe labyrinthe=new Labyrinthe(); //Matrice qui sera visualisée
         
         private boolean solution=false; // labyrinthe résolu sur l'individu
+        
+        private int x_dest=13; // Coordonnées de la case arrivée
+        private int y_dest=13;
 
    
 	
 	//Constructeur
 	public Individu(){ 
 		System.out.println("creation indi");
-                int[][]  deplacement={{1,1}};
-                chemin.setDeplacement(deplacement);
+            //Positionnement de départ
+          
+            for (int i=0;i<this.getLabyrinthe().n();i++) {
+                for (int j=0;j<this.getLabyrinthe().n();j++) {
+                    if (this.getLabyrinthe().estDepart(i, j)) {
+                     int[][]  deplacement={{i,j}};
+                     chemin.setDeplacement(deplacement);
+                    }
+                }
+            }
+                
 	}
 	
 	
         public int distance(int x, int y){
             int distance=0;
-            distance=Math.abs(x-13)+Math.abs(y-13); // en considérant que l'arrivée est en 13 , 13       
+            caseArrivee();
+            distance=Math.abs(x-x_dest)+Math.abs(y-y_dest); // en considérant que l'arrivée est en 13 , 13       
             return distance;
         }
 
@@ -40,6 +53,18 @@ public class Individu{
 
         public void setSolution(boolean solution) {
             this.solution = solution;
+        }
+        
+        public void caseArrivee(){
+            // Recherche case arrivée
+            for (int i=0;i<this.getLabyrinthe().n();i++) {
+                for (int j=0;j<this.getLabyrinthe().n();j++) {
+                    if (this.getLabyrinthe().estArrivee(i, j)) {
+                            x_dest=i;
+                            y_dest=j;
+                    }
+                }
+            }
         }
         
 }
