@@ -26,6 +26,7 @@ public class Labyrinthe {
         
         private int[][] listeMurs= new int[0][0];
         
+        
          public Labyrinthe(){
              String[] chaine = new String[15];
 		String fichier ="coucou.txt";

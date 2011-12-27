@@ -101,9 +101,103 @@ import javax.swing.JPanel;
 
 	@Override
 	public void BFS() {
-         id_BFS.getChemin().AddDeplacement(2, 1);
-         setIndividu_afficher(id_BFS);
-         repaint();
+          id_BFS=new Individu();
+	
+            //Matrice permettant de mémoriser les positions
+            int[][] mem_positionX = new int[40][40];
+            int[][] mem_positionY = new int[40][40];
+            //Entier permettant de sélectionner les cases de mem-position
+            int i; //Sélectionne le niveau dans le diagramme des possibilités
+            int j; //Sélectionne le numéro dans les niveaux
+            int k;  //Permet de remplir les cases mémoires  
+            
+            boolean individu_arrivee=false; // boolean permettant d'arreter le programme quand l'individu est arrivé
+
+            ///Position de l'individu dans le labyrinthe en pixels
+            int x=id_DFS.getChemin().getDeplacement()[0][0]; //Abscisse
+            int y=id_DFS.getChemin().getDeplacement()[0][1]; //Ordonnée
+            
+
+            //Matrice de boolean pour vérifier si une position dans le labyrinthe a déjà été mémorisée
+            boolean[][] DejaMem= new boolean[15][15];
+
+            //Initialisation de la matrice DejaMem
+            for(int a=0; a<15; a++) {
+                for(int b=0; b<15; b++){ 
+                    DejaMem[a][b]=false;
+                }
+            }
+
+            DejaMem[1][1]=true; //Permet de démarrer.
+            mem_positionX[0][0]=x;
+            mem_positionY[0][0]=y;
+
+            for (i=0;i<39;i++){
+                k=0;
+                for (j=0;j<40;j++) {
+                    if (mem_positionX[i][j]!=0) { //Nous vérifions si la case i,j de mem_position a déjà enregistré une position
+                        if (individu_arrivee==false) {
+                        
+            x=mem_positionX[i][j];
+            y=mem_positionY[i][j];
+            
+            // Déplacer l'individu à une possibilité de case
+            id_BFS.getChemin().AddDeplacement(x,y);
+            setIndividu_afficher(id_BFS);
+            repaint();
+            
+            if (id_BFS.getLabyrinthe().estArrivee(x,y)==true) { //Arrête le programme si l'individu est arrivé
+               individu_arrivee=true; 
+            }
+
+            //Analyse des possibilités de chemin et mise en mémoire
+
+            //Est
+            if(id_BFS.getChemin().existeDeja(x+1,y)==false && id_BFS.getLabyrinthe().estMur(x+1,y)==false) {
+                if(DejaMem[x+1][y]==false) {
+                    mem_positionX[i+1][k]=x+1;
+                    mem_positionY[i+1][k]=y;
+                    k=k+1;
+                    DejaMem[x+1][y]=true;
+                }
+            }
+
+            //Sud
+            if(id_BFS.getChemin().existeDeja(x,y+1)==false && id_BFS.getLabyrinthe().estMur(x,y+1)==false) {
+                if(DejaMem[x][y+1]==false) {
+                    mem_positionX[i+1][k]=x;
+                    mem_positionY[i+1][k]=y+1;
+                    k=k+1;
+                    DejaMem[x][y+1]=true;
+                }
+            }
+
+            //Ouest
+            if(id_BFS.getChemin().existeDeja(x-1,y)==false && id_BFS.getLabyrinthe().estMur(x-1,y)==false) {
+                if(DejaMem[x-1][y]==false) {
+                    mem_positionX[i+1][k]=x-1;
+                    mem_positionY[i+1][k]=y;
+                    k=k+1;
+                    DejaMem[x-1][y]=true;
+                }
+            }
+            //Nord
+            if(id_BFS.getChemin().existeDeja(x,y-1)==false && id_BFS.getLabyrinthe().estMur(x,y-1)==false) {
+                if(DejaMem[x][y-1]==false) {
+                    mem_positionX[i+1][k]=x;
+                    mem_positionY[i+1][k]=y-1;
+                    k=k+1;
+                    DejaMem[x][y-1]=true;
+                }
+            }
+
+            }
+            
+            }}}
+            for (i=0;i<id_BFS.getChemin().getNbcases();i++) {
+                System.out.println(id_BFS.getChemin().getDeplacement()[i][0]+" "+id_BFS.getChemin().getDeplacement()[i][1]);
+            }
+            System.out.println("distance parcourue= "+id_BFS.getChemin().getNbcases());
          
 	}
 
@@ -111,7 +205,99 @@ import javax.swing.JPanel;
 
 	@Override
 	public void DFS() {
-		// TODO Auto-generated method stub
+
+             id_DFS=new Individu();
+	
+            //Matrice permettant de mémoriser les positions
+            //int[][] mem_positionX = new int[40][40];
+            //int[][] mem_positionY = new int[40][40];
+            //Entier permettant de sélectionner les cases de mem-position
+            int i; //Sélectionne le niveau dans le diagramme des possibilités
+            int j; //Sélectionne le numéro dans les niveaux
+            //int k;  //Permet de remplir les cases mémoires
+                    
+            //Matrices permettant de mémoriser la case précédente d'une autre
+            int[][] pos_precX = new int[40][40];
+            int[][] pos_precY = new int[40][40];
+            
+            int tamponX; //Mémoire tampon permettant à l'individu de revenir en arrière en utilisant pos_prec
+            int tamponY; 
+            
+            //boolean individu_arrivee=false; // boolean permettant d'arreter le programme quand l'individu est arrivé
+
+            //Permet de noter une case ne précédent aucun débouché de solution
+            boolean[][] aucune_solution=new boolean[15][15];
+            
+            //Position de l'individu dans le labyrinthe en pixels
+            int x=id_DFS.getChemin().getDeplacement()[0][0]; //Abscisse
+            int y=id_DFS.getChemin().getDeplacement()[0][1]; //Ordonnée
+            
+
+            
+            //mem_positionX[0][0]=x;
+            //mem_positionY[0][0]=y;
+            
+            while (id_DFS.getLabyrinthe().estArrivee(x,y)==false) {
+               
+            //Si possible, se déplacer à l'Est par rapport à la position mémorisée par i 
+                if ( aucune_solution[x+1][y]==false && id_DFS.getChemin().existeDeja(x+1,y)==false && id_DFS.getLabyrinthe().estMur(x+1,y)==false) {
+                    //Se déplacer et enregistrer position en i+1
+                    id_DFS.getChemin().AddDeplacement(x+1,y);
+                    setIndividu_afficher(id_DFS);
+                    repaint();
+                    pos_precX[x+1][y]=x;
+                    pos_precY[x+1][y]=y;
+                    x=x+1;
+                }
+                // sinon se déplacer au Sud ou au Nord ou à l'Ouest...
+                else{ 
+                    if (aucune_solution[x][y+1]==false && id_DFS.getChemin().existeDeja(x,y+1)==false && id_DFS.getLabyrinthe().estMur(x,y+1)==false) {
+                        id_DFS.getChemin().AddDeplacement(x,y+1);
+                        setIndividu_afficher(id_DFS);
+                        repaint();
+                        pos_precX[x][y+1]=x;
+                        pos_precY[x][y+1]=y;
+                        y=y+1;
+                    }
+                    else { //deplacement à l'Ouest
+                        if (aucune_solution[x-1][y]==false && id_DFS.getChemin().existeDeja(x-1,y)==false && id_DFS.getLabyrinthe().estMur(x-1,y)==false) {
+                            id_DFS.getChemin().AddDeplacement(x-1,y);                            setIndividu_afficher(id_DFS);
+                            repaint();
+                            pos_precX[x-1][y]=x;
+                            pos_precY[x-1][y]=y;
+                            x=x-1;
+                        }
+                        else { //deplacement au Nord
+                            if (aucune_solution[x][y-1]==false && id_DFS.getChemin().existeDeja(x,y-1)==false && id_DFS.getLabyrinthe().estMur(x,y-1)==false) {
+                                id_DFS.getChemin().AddDeplacement(x,y-1);
+                                setIndividu_afficher(id_DFS);
+                                repaint();
+                                pos_precX[x][y-1]=x;
+                                pos_precY[x][y-1]=y;
+                                y=y-1;
+                            }
+                            else { 
+                //Si aucune position possible alors
+                //Enregistrer la position comme ayant aucun débouché de solution
+                                aucune_solution[x][y]=true;
+                                //Remonter à l'étape i-1 
+                                tamponX=pos_precX[x][y];
+                                tamponY=pos_precY[x][y];
+                                x=tamponX;
+                                y=tamponY;
+                                id_DFS.getChemin().AddDeplacement(x,y);
+                                setIndividu_afficher(id_DFS);
+                                repaint();
+                            }
+                        }
+                    }	
+                }
+            }
+            for (i=0;i<id_DFS.getChemin().getNbcases();i++) {
+                System.out.println(id_DFS.getChemin().getDeplacement()[i][0]+" "+id_DFS.getChemin().getDeplacement()[i][1]);
+            }
+            System.out.println("distance parcourue= "+id_DFS.getChemin().getNbcases());
+
 		
 	}
 
