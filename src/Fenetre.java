@@ -49,10 +49,43 @@ public class Fenetre extends JFrame {
 	
         // Boolean en cours d'animation ?
         private boolean animated = true;
+        // Solution trouvée par l'algorithme
+        private boolean solution=false;
         
-        // Thread (à voir si il sera utilisé)
+        // Thread 
 	private Thread t;
 	
+         // Variables pour chaques algorithmes
+        private Individu id_DFS=new Individu();
+        private Individu id_BFS=new Individu();
+        private Individu id_greedy=new Individu();
+        private Individu id_A=new Individu();
+        private Individu id_escalade=new Individu();
+        private Echantillon echantillon_tabous=new Echantillon(1);
+        private Echantillon echantillon_recuit=new Echantillon(1);
+        private N_echantillon n_echantillon_genetique=new N_echantillon(1,1);    
+	private N_echantillon n_echantillon_fourmis=new N_echantillon(1,1);
+        
+        
+        
+        
+            //Autres variables
+        private int nbIndividu=1;
+      	private int nbEchantillon=1;
+        private int iteration=0;
+
+   
+        private int numeroIndividuEncours=1;
+	private int numeroEchantillonEncours=1;
+        
+        
+            // Variables de sorties d'algorithme pour comparaison
+	private float moyenneTempsResolution;
+	private float pourcentageReussite;
+	private float critere1;
+	private float critere2;
+        
+        
         
         /**
          Constructeur
@@ -75,6 +108,9 @@ public class Fenetre extends JFrame {
 		comboBoxNbE = new JComboBox<>(listeE);
 		comboBoxNbI = new JComboBox<>(listeI);
 		comboBoxTypeResolution = new JComboBox<>(listeResol);
+                
+                
+                
                 
                 //Définition de l'écoute des commandes
 		comboBoxNbE.addActionListener(new ItemActionNbE());
@@ -227,6 +263,7 @@ public class Fenetre extends JFrame {
         //Appui bouton Lancer
 	class BoutonLancerListener implements ActionListener{
 		public void actionPerformed (ActionEvent arg0) {
+                        animated=true;
 			boutonLancer.setEnabled (false);
 			boutonArreter.setEnabled (true);
 			comboBoxNbE.setEnabled (false);
@@ -236,98 +273,98 @@ public class Fenetre extends JFrame {
                         //Selection nombre d'échantillon
 			switch(comboBoxNbE.getSelectedIndex()){
 			case 0:
-				getPan().setNbEchantillon(1);
+				nbEchantillon=1;
 				break;
 			case 1:
-				getPan().setNbEchantillon(2);
+				nbEchantillon=2;
 				break;
 			case 2:
-				getPan().setNbEchantillon(3);
+				nbEchantillon=3;
 				break;
 			case 3:
-				getPan().setNbEchantillon(4);
+				nbEchantillon=4;
 				break;
 			case 4:
-				getPan().setNbEchantillon(5);
+				nbEchantillon=5;
 				break;
 			case 5:
-				getPan().setNbEchantillon(6);
+				nbEchantillon=6;
 				break;
 			case 6:
-				getPan().setNbEchantillon(7);
+				nbEchantillon=7;
 				break;
 			case 7:
-				getPan().setNbEchantillon(8);
+				nbEchantillon=8;
 				break;
 			case 8:
-				getPan().setNbEchantillon(9);
+				nbEchantillon=9;
 				break;
 			case 9:
-				getPan().setNbEchantillon(10);
+				nbEchantillon=10;
 				break;
 			}
 			
                         //Selection nombre d'individus
 			switch(comboBoxNbI.getSelectedIndex()){
 			case 0:
-				getPan().setNbIndividu(10);
+				nbIndividu=10;
 				break;
 			case 1:
-				getPan().setNbIndividu(20);
+				nbIndividu=20;
 				break;
 			case 2:
-				getPan().setNbIndividu(30);
+				nbIndividu=30;
 				break;
 			case 3:
-				getPan().setNbIndividu(40);
+				nbIndividu=40;
 				break;
 			case 4:
-				getPan().setNbIndividu(50);
+				nbIndividu=50;
 				break;
 			case 5:
-				getPan().setNbIndividu(60);
+				nbIndividu=60;
 				break;
 			case 6:
-				getPan().setNbIndividu(70);
+				nbIndividu=70;
 				break;
 			case 7:
-				getPan().setNbIndividu(80);
+				nbIndividu=80;
 				break;
 			case 8:
-				getPan().setNbIndividu(90);
+				nbIndividu=90;
 				break;
 			case 9:
-				getPan().setNbIndividu(100);
+				nbIndividu=100;
 				break;
 			case 10:
-				getPan().setNbIndividu(110);
+				nbIndividu=110;
 				break;
 			case 11:
-				getPan().setNbIndividu(120);
+				nbIndividu=120;
 				break;
 			case 12:
-				getPan().setNbIndividu(130);
+				nbIndividu=130;
 				break;
 			case 13:
-				getPan().setNbIndividu(140);
+				nbIndividu=140;
 				break;
 			case 14:
-				getPan().setNbIndividu(150);
+				nbIndividu=150;
 				break;
 			case 15:
-				getPan().setNbIndividu(160);
+				nbIndividu=160;
 				break;
 			case 16:
-				getPan().setNbIndividu(170);
+				nbIndividu=170;
 				break;
 			case 17:
-				getPan().setNbIndividu(180);
+				nbIndividu=180;
 				break;
 			case 18:
-				getPan().setNbIndividu(190);
+				nbIndividu=190;
 				break;
 			case 19:
-				getPan().setNbIndividu(200);
+				nbIndividu=200;
 				break;
 			}
                         	
@@ -335,65 +372,63 @@ public class Fenetre extends JFrame {
                     // Selection type de résolution
                     switch(comboBoxTypeResolution.getSelectedIndex()){
                     case 0:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().DFS();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new DFS_Runnable());
                             break;
                     case 1:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().BFS();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new BFS_Runnable());
                             break;
 
                     case 2:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().AlgorithmeGreedy();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new Greedy_Runnable());
                             break;
 
                     case 3:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().AlgorithmeA();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new A_Runnable());
                             break;
 
                     case 4:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().Escalade();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new Escalade_Runnable());
                             break;
 
                     case 5:
-                            getPan().setNbEchantillon(1);
-                            getPan().setNbIndividu(1);
-                            getPan().RechercheAvecTabous();
+                            nbEchantillon=1;
+                            nbIndividu=1;
+                            t=new Thread(new Tabous_Runnable());
                             break;
 
                     case 6:
-                            getPan().setNbEchantillon(1);
-                            getPan().RecuitSimule();
+                            nbEchantillon=1;
+                            t=new Thread(new Recuit_Runnable());
                             break;
 
                     case 7:
-                            getPan().AlgorithmeGenetique();
+                            t=new Thread(new Genetique_Runnable());
                             break;
 
                     case 8:
-                            getPan().AlgorithmeColonieFourmis();
+                            t=new Thread(new Fourmis_Runnable());
                             break;
 
                     case 9:
-                            getPan().LogiqueDeProposition();
+                            t=new Thread(new Proposition_Runnable());
                             break;
 
                     case 10:
-                            getPan().LogiqueDePredicats();
+                            t=new Thread(new Predicat_Runnable());
                             break;
                     }
-                    
-                   label1.setText("Vous avez cliqué sur le bouton Lancer");
-                   System.out.println("Parametres d'execution :   Algo " +comboBoxTypeResolution.getSelectedItem()+ " ; NbI =  " + getPan().getNbIndividu() + " ; NbE = " + getPan().getNbEchantillon());
-		
+                    System.out.println("Parametres d'execution :   Algo " +comboBoxTypeResolution.getSelectedItem()+ " ; NbI =  " + nbIndividu + " ; NbE = " + nbEchantillon);
+                    t.start();
 		}
 	}
 	
@@ -406,6 +441,8 @@ public class Fenetre extends JFrame {
 			comboBoxNbE.setEnabled (true);
 			comboBoxNbI.setEnabled (true);
 			comboBoxTypeResolution.setEnabled (true);
+                        boutonContinuer.setEnabled(false);
+                        solution=true;
 		label1.setText("Vous avez cliqué sur le bouton Arreter");
 		
 		}
@@ -415,11 +452,578 @@ public class Fenetre extends JFrame {
 	class BoutonContinuerListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent arg0) {
-			boutonLancer.setEnabled (false);
-		label1.setText("Vous avez cliqué sur le bouton Continuer");
-
+                        animated=true;
+			boutonContinuer.setEnabled (false);
 		}
 	}
         
         
+        
+        // Classes implétentant l'interface Runnable
+        
+        class BFS_Runnable implements Runnable{
+        @Override
+            public void run() {
+            BFS();
+            }
+            }
+        
+        class DFS_Runnable implements Runnable{
+        @Override
+            public void run() {
+            DFS();
+            }
+            }
+        
+        class Greedy_Runnable implements Runnable{
+        @Override
+            public void run() {
+            AlgorithmeGreedy();
+            }
+            }
+        
+        class A_Runnable implements Runnable{
+        @Override
+            public void run() {
+            AlgorithmeA();
+            }
+            }
+        
+        class Escalade_Runnable implements Runnable{
+        @Override
+            public void run() {
+            Escalade();
+            }
+            }
+        
+        class Tabous_Runnable implements Runnable{
+        @Override
+            public void run() {
+            RechercheAvecTabous();
+            }
+            }
+        
+        class Recuit_Runnable implements Runnable{
+        @Override
+            public void run() {
+            RecuitSimule();
+            }
+            }
+        
+        class Genetique_Runnable implements Runnable{
+        @Override
+            public void run() {
+            AlgorithmeGenetique();
+            }
+            }
+        
+        class Fourmis_Runnable implements Runnable{
+        @Override
+            public void run() {
+            AlgorithmeColonieFourmis();
+            }
+            }
+        
+        class Proposition_Runnable implements Runnable{
+        @Override
+            public void run() {
+            LogiqueDeProposition();
+            }
+            }
+        
+        class Predicat_Runnable implements Runnable{
+        @Override
+            public void run() {
+            LogiqueDePredicats();
+            }
+            }
+        
+        
+        /*
+         * Autres méthodes
+         */
+         public double round(double f, int i){
+            return (double)((int)(f*Math.pow(10,i)+0.5))/Math.pow(10, i);       
+                    }
+        
+         public void sendIteration(){
+             label1.setText("iteration =  "+iteration);
+         }
+        
+        
+        
+        /*
+         * Définition des méthodes de résolution
+         */
+
+	
+	public void BFS() {
+          id_BFS=new Individu();
+	
+            //Matrice permettant de mémoriser les positions
+            int[][] mem_positionX = new int[40][40];
+            int[][] mem_positionY = new int[40][40];
+            //Entier permettant de sélectionner les cases de mem-position
+            int i; //Sélectionne le niveau dans le diagramme des possibilités
+            int j; //Sélectionne le numéro dans les niveaux
+            int k;  //Permet de remplir les cases mémoires  
+            
+            solution=false; // boolean permettant d'arreter le programme quand l'individu est arrivé
+
+            ///Position de l'individu dans le labyrinthe en pixels
+            int x=id_DFS.getChemin().getDeplacement()[0][0]; //Abscisse
+            int y=id_DFS.getChemin().getDeplacement()[0][1]; //Ordonnée
+            
+
+            //Matrice de boolean pour vérifier si une position dans le labyrinthe a déjà été mémorisée
+            boolean[][] DejaMem= new boolean[15][15];
+
+            //Initialisation de la matrice DejaMem
+            for(int a=0; a<15; a++) {
+                for(int b=0; b<15; b++){ 
+                    DejaMem[a][b]=false;
+                }
+            }
+
+            DejaMem[1][1]=true; //Permet de démarrer.
+            mem_positionX[0][0]=x;
+            mem_positionY[0][0]=y;
+
+            for (i=0;i<39;i++){
+                k=0;
+                for (j=0;j<40;j++) {
+                    if (mem_positionX[i][j]!=0) { //Nous vérifions si la case i,j de mem_position a déjà enregistré une position
+                        if (solution==false) {
+                        
+            x=mem_positionX[i][j];
+            y=mem_positionY[i][j];
+            
+            // Déplacer l'individu à une possibilité de case
+            id_BFS.getChemin().AddDeplacement(x,y);
+            getPan().setIndividu_afficher(id_BFS);
+            getPan().repaint();
+            
+             //Arrête le programme si l'individu est arrivé
+               solution=id_BFS.getLabyrinthe().estArrivee(x,y); 
+            
+
+            //Analyse des possibilités de chemin et mise en mémoire
+
+            //Est
+            if(id_BFS.getChemin().existeDeja(x+1,y)==false && id_BFS.getLabyrinthe().estMur(x+1,y)==false) {
+                if(DejaMem[x+1][y]==false) {
+                    mem_positionX[i+1][k]=x+1;
+                    mem_positionY[i+1][k]=y;
+                    k=k+1;
+                    DejaMem[x+1][y]=true;
+                }
+            }
+
+            //Sud
+            if(id_BFS.getChemin().existeDeja(x,y+1)==false && id_BFS.getLabyrinthe().estMur(x,y+1)==false) {
+                if(DejaMem[x][y+1]==false) {
+                    mem_positionX[i+1][k]=x;
+                    mem_positionY[i+1][k]=y+1;
+                    k=k+1;
+                    DejaMem[x][y+1]=true;
+                }
+            }
+
+            //Ouest
+            if(id_BFS.getChemin().existeDeja(x-1,y)==false && id_BFS.getLabyrinthe().estMur(x-1,y)==false) {
+                if(DejaMem[x-1][y]==false) {
+                    mem_positionX[i+1][k]=x-1;
+                    mem_positionY[i+1][k]=y;
+                    k=k+1;
+                    DejaMem[x-1][y]=true;
+                }
+            }
+            //Nord
+            if(id_BFS.getChemin().existeDeja(x,y-1)==false && id_BFS.getLabyrinthe().estMur(x,y-1)==false) {
+                if(DejaMem[x][y-1]==false) {
+                    mem_positionX[i+1][k]=x;
+                    mem_positionY[i+1][k]=y-1;
+                    k=k+1;
+                    DejaMem[x][y-1]=true;
+                }
+            }
+
+            }
+            
+            }}}
+            for (i=0;i<id_BFS.getChemin().getNbcases();i++) {
+                System.out.println(id_BFS.getChemin().getDeplacement()[i][0]+" "+id_BFS.getChemin().getDeplacement()[i][1]);
+            }
+            System.out.println("distance parcourue= "+id_BFS.getChemin().getNbcases());
+            boutonLancer.setEnabled (true);
+            boutonArreter.setEnabled (false);
+            comboBoxNbE.setEnabled (true);
+            comboBoxNbI.setEnabled (true);
+            comboBoxTypeResolution.setEnabled (true);
+	}
+
+
+
+	
+	public void DFS() {
+
+             id_DFS=new Individu();
+             iteration=0;
+            //Matrice permettant de mémoriser les positions
+            //int[][] mem_positionX = new int[40][40];
+            //int[][] mem_positionY = new int[40][40];
+            //Entier permettant de sélectionner les cases de mem-position
+            int i; //Sélectionne le niveau dans le diagramme des possibilités
+            int j; //Sélectionne le numéro dans les niveaux
+            //int k;  //Permet de remplir les cases mémoires
+                    
+            //Matrices permettant de mémoriser la case précédente d'une autre
+            int[][] pos_precX = new int[40][40];
+            int[][] pos_precY = new int[40][40];
+            
+            int tamponX; //Mémoire tampon permettant à l'individu de revenir en arrière en utilisant pos_prec
+            int tamponY; 
+            
+            //boolean individu_arrivee=false; // boolean permettant d'arreter le programme quand l'individu est arrivé
+
+            //Permet de noter une case ne précédent aucun débouché de solution
+            boolean[][] aucune_solution=new boolean[15][15];
+            
+            //Position de l'individu dans le labyrinthe en pixels
+            int x=id_DFS.getChemin().getDeplacement()[0][0]; //Abscisse
+            int y=id_DFS.getChemin().getDeplacement()[0][1]; //Ordonnée
+            
+
+            
+            //mem_positionX[0][0]=x;
+            //mem_positionY[0][0]=y;
+            
+            solution=id_DFS.getLabyrinthe().estArrivee(x,y);
+            
+            while (solution==false) {
+               if(animated){
+            //Si possible, se déplacer à l'Est par rapport à la position mémorisée par i 
+                if ( aucune_solution[x+1][y]==false && id_DFS.getChemin().existeDeja(x+1,y)==false && id_DFS.getLabyrinthe().estMur(x+1,y)==false) {
+                    //Se déplacer et enregistrer position en i+1
+                    id_DFS.getChemin().AddDeplacement(x+1,y);
+                    pos_precX[x+1][y]=x;
+                    pos_precY[x+1][y]=y;
+                    x=x+1;
+                    iteration++;
+                }
+                // sinon se déplacer au Sud ou au Nord ou à l'Ouest...
+                else{ 
+                    if (aucune_solution[x][y+1]==false && id_DFS.getChemin().existeDeja(x,y+1)==false && id_DFS.getLabyrinthe().estMur(x,y+1)==false) {
+                        id_DFS.getChemin().AddDeplacement(x,y+1);
+                        pos_precX[x][y+1]=x;
+                        pos_precY[x][y+1]=y;
+                        y=y+1;
+                        iteration++;
+                    }
+                    else { //deplacement à l'Ouest
+                        if (aucune_solution[x-1][y]==false && id_DFS.getChemin().existeDeja(x-1,y)==false && id_DFS.getLabyrinthe().estMur(x-1,y)==false) {
+                            id_DFS.getChemin().AddDeplacement(x-1,y);                            
+                            getPan().setIndividu_afficher(id_DFS);
+                            getPan().repaint();
+                            pos_precX[x-1][y]=x;
+                            pos_precY[x-1][y]=y;
+                            x=x-1;
+                            iteration++;
+                        }
+                        else { //deplacement au Nord
+                            if (aucune_solution[x][y-1]==false && id_DFS.getChemin().existeDeja(x,y-1)==false && id_DFS.getLabyrinthe().estMur(x,y-1)==false) {
+                                id_DFS.getChemin().AddDeplacement(x,y-1);
+                                getPan().setIndividu_afficher(id_DFS);
+                                getPan().repaint();
+                                pos_precX[x][y-1]=x;
+                                pos_precY[x][y-1]=y;
+                                y=y-1;
+                                iteration++;
+                            }
+                            else { 
+                //Si aucune position possible alors
+                //Enregistrer la position comme ayant aucun débouché de solution
+                                aucune_solution[x][y]=true;
+                                //Remonter à l'étape i-1 
+                                tamponX=pos_precX[x][y];
+                                tamponY=pos_precY[x][y];
+                                x=tamponX;
+                                y=tamponY;
+                                id_DFS.getChemin().AddDeplacement(x,y);
+                                iteration++;
+                            }
+                        }
+                    }	
+                }
+               }
+            solution=id_DFS.getLabyrinthe().estArrivee(x,y);
+            if(iteration%10==0){
+                    if(animated){
+                     animated=false;
+                     sendIteration();
+                     boutonContinuer.setEnabled (true);
+                     getPan().setIndividu_afficher(id_DFS);
+                     getPan().repaint();
+                     if(solution){
+                        iteration++;
+                        }
+                    }
+                        System.out.println(" attente "+iteration);
+                        try {
+                    Thread .sleep(500);
+                    } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    }
+
+                    }
+            }
+            for (i=0;i<id_DFS.getChemin().getNbcases();i++) {
+                System.out.println(id_DFS.getChemin().getDeplacement()[i][0]+" "+id_DFS.getChemin().getDeplacement()[i][1]);
+            }
+            System.out.println("distance parcourue= "+id_DFS.getChemin().getNbcases());
+            getPan().setIndividu_afficher(id_DFS);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled (true);
+            boutonArreter.setEnabled (false);
+            comboBoxNbE.setEnabled (true);
+            comboBoxNbI.setEnabled (true);
+            comboBoxTypeResolution.setEnabled (true);
+		
+	}
+
+
+
+	
+	public void AlgorithmeGreedy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void AlgorithmeA() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void Escalade() {
+            // Initialisation
+                iteration=0;
+		id_escalade=new Individu();
+                solution=false;
+                boolean bloque=false;
+                int x=1;
+                int y=1;
+                int distance=id_escalade.distance(x, y);
+               
+                
+            // Boucle pour le déplacement    
+                while((solution==false)&&(bloque==false)){
+                    if(animated){
+                        // Recherche du meilleur voisin
+                        if(!id_escalade.getLabyrinthe().estMur(x+1, y)&&(distance>id_escalade.distance(x+1, y))){ // Test à l'Est
+                            x=x+1; 
+                            id_escalade.getChemin().AddDeplacement(x, y);
+                        }
+                            else if(!id_escalade.getLabyrinthe().estMur(x, y+1)&&(distance>id_escalade.distance(x, y+1))){
+                                y=y+1; 
+                                id_escalade.getChemin().AddDeplacement(x, y);
+                                }
+                                else if(!id_escalade.getLabyrinthe().estMur(x-1, y)&&(distance>id_escalade.distance(x-1, y))){
+                                    x=x-1; 
+                                    id_escalade.getChemin().AddDeplacement(x, y);
+                                    }
+                                    else if(!id_escalade.getLabyrinthe().estMur(x, y-1)&&(distance>id_escalade.distance(x, y-1))){
+                                       y=y-1;   
+                                       id_escalade.getChemin().AddDeplacement(x, y);
+                                    }
+
+                        // Test bloque
+                        if(distance==id_escalade.distance(x, y)){
+                            bloque=true;
+                        }
+                        else{
+                            // Calcul de la distance
+                            distance=id_escalade.distance(x, y);   
+                        }
+                         //Test solution
+                        solution=id_escalade.getLabyrinthe().estArrivee(x, y);
+                        if(!solution){
+                            iteration++;
+                        }
+                    }
+                    if(iteration%10==0){
+                    if(animated){
+                     animated=false;
+                     sendIteration();
+                     boutonContinuer.setEnabled (true);
+                     getPan().setIndividu_afficher(id_escalade);
+                     getPan().repaint();
+                     if(solution){
+                        iteration++;
+                        }
+                    }
+                        System.out.println(" attente "+iteration);
+                        try {
+                    Thread .sleep(500);
+                    } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    }
+
+                    }
+                }
+                
+            // Affichage du résultat
+                getPan().setIndividu_afficher(id_escalade);
+                getPan().repaint();
+                System.out.println(" bloqué = "+ bloque + " ; solution = "+ solution);
+                sendIteration();
+                boutonLancer.setEnabled (true);
+                boutonArreter.setEnabled (false);
+		comboBoxNbE.setEnabled (true);
+                comboBoxNbI.setEnabled (true);
+		comboBoxTypeResolution.setEnabled (true);
+	}
+
+
+
+	
+	public void RechercheAvecTabous() {
+                //Initialisation
+		echantillon_tabous=new Echantillon(nbIndividu);
+                solution=false;
+                boolean bloque=false;
+                int x=1;
+                int y=1;
+                int x_dest=x;
+                int y_dest=y;
+                int distance_Est=0;
+                int distance_Sud=0;
+                int distance_Ouest=0;
+                int distance_Nord=0;
+                int distance=0;
+                
+                // Boucle d'execution de l'algorithme pour chaque individu
+            for(int i=0; i<echantillon_tabous.getNbIndividu();i++){
+                // Boucle de résolution
+                while((solution==false)&&(bloque==false)){
+                    if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x+1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x+1, y))){
+                        distance_Est=echantillon_tabous.getIndividu(i+1).distance(x+1, y);
+                        x_dest=x+1;
+                        y_dest=y;
+                        distance=distance_Est;
+                    }
+                    else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y+1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y+1))){
+                        distance_Sud=echantillon_tabous.getIndividu(i+1).distance(x, y+1);
+                            if(distance_Sud<distance){
+                                x_dest=x;
+                                y_dest=y+1;
+                                distance=distance_Sud;
+                            }
+                            if(distance_Sud==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x;
+                                   y_dest=y+1;
+                                   distance=distance_Sud; 
+                                }
+                            }  
+                        }
+                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x-1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x-1, y))){
+                        distance_Ouest=echantillon_tabous.getIndividu(i+1).distance(x-1, y);
+                            if(distance_Ouest<distance){
+                                x_dest=x-1;
+                                y_dest=y;
+                                distance=distance_Ouest;
+                            }
+                            if(distance_Ouest==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x-1;
+                                   y_dest=y;
+                                   distance=distance_Ouest; 
+                                }
+                            }   
+                        }
+                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y-1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y-1))){
+                        distance_Nord=echantillon_tabous.getIndividu(i+1).distance(x, y-1);
+                            if(distance_Nord<distance){
+                                x_dest=x;
+                                y_dest=y-1;
+                                distance=distance_Nord;
+                            }
+                            if(distance_Nord==distance){
+                                int a=(int)(round(Math.random(),0));
+                                if(a==0){
+                                   x_dest=x;
+                                   y_dest=y-1;
+                                   distance=distance_Nord; 
+                                }
+                            }   
+                        }
+                
+                    // Test bloque
+                    if(distance==echantillon_tabous.getIndividu(i+1).distance(x, y)){
+                        bloque=true;
+                    }
+                    
+                     //Test solution
+                    solution=echantillon_tabous.getIndividu(i+1).getLabyrinthe().estArrivee(x, y);
+                     
+                }
+            }
+               // int distance=id_escalade.distance(x, y);
+            
+        }
+                
+		
+	
+
+
+
+	
+	public void RecuitSimule() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void AlgorithmeGenetique() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void AlgorithmeColonieFourmis() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void LogiqueDeProposition() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
+	public void LogiqueDePredicats() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
