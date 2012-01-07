@@ -1,33 +1,49 @@
+package infolaby;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
+/**
+ * Classe contenant la totalite des algorithmes de resolution ainsi que la gestion de l'interface
+ * @author Olivier
+ */
 public class Fenetre extends JFrame {
     
-        // Panneau affichage labyrinthe
+       
+        /**
+         * Panneau affichage labyrinthe
+         */
 	private Panneau pan = new Panneau();
         
-        // JComboBox : listes déroulantes
-	private JComboBox<String> comboBoxNbE = new JComboBox<>(); 
+        /**
+         * JComboBox : listes déroulantes
+         */
+	private JComboBox<String> comboBoxNbE = new JComboBox<>();
 	private JComboBox<String> comboBoxNbI = new JComboBox<>();
 	private JComboBox<String> comboBoxTypeResolution = new JComboBox<>();
         
-        //JButton : Bouton
+        
+        /**
+         * JButton : Bouton
+         */
 	private JButton boutonLancer = new JButton("Lancer");   
 	private JButton boutonArreter = new JButton("Arreter");
 	private JButton boutonContinuer = new JButton("Continuer");
         
-        // JPanel : Layout pour placer les boutons et informations
+        
+        /**
+         * JPanel : Layout pour placer les boutons et informations
+         */
 	private JPanel container = new JPanel();    
 	private JPanel south = new JPanel();
 	private JPanel north2 = new JPanel();
@@ -35,7 +51,9 @@ public class Fenetre extends JFrame {
         private JPanel west = new JPanel();
         private JPanel west2 = new JPanel();
         
-        //Jlabel : Ecriture de chaîne de caractères sur l'interface
+        /**
+         * Jlabel : Ecriture de chaîne de caractères sur l'interface
+         */
         private JLabel label1 = new JLabel(""); 
 	private JLabel labelE = new JLabel("0");
 	private JLabel labelI = new JLabel("0");
@@ -45,50 +63,102 @@ public class Fenetre extends JFrame {
 	private JLabel labelP = new JLabel("0");
 	private JLabel labelC1 = new JLabel("0.0");
 	private JLabel labelC2 = new JLabel("0.0"); 
-	
-	
-        // Boolean en cours d'animation ?
+
+        /**
+         * Boolean en cours d'animation ? selon l'etat, met en pause la résolution
+         */
         private boolean animated = true;
-        // Solution trouvée par l'algorithme
+        
+        /**
+         * Solution trouvée par l'algorithme
+         */
         private boolean solution=false;
         
-        // Thread 
+        /**
+         * Thread cree lors d une execution d un algorithme
+         */
 	private Thread t;
 	
-         // Variables pour chaques algorithmes
+        /**
+         * Variable algorithme DFS
+         */
         private Individu id_DFS=new Individu();
+         /**
+         * Variable algorithme BFS
+         */
         private Individu id_BFS=new Individu();
+         /**
+         * Variable algorithme greedy
+         */
         private Individu id_greedy=new Individu();
+         /**
+         * Variable algorithme A
+         */
         private Individu id_A=new Individu();
+         /**
+         * Variable algorithme escalade
+         */
         private Individu id_escalade=new Individu();
-        private Echantillon echantillon_tabous=new Echantillon(1);
+        /**
+         * Variable algorithme tabous
+         */
+        private Individu id_tabous=new Individu();
+        /**
+         * Variable algorithme recuit
+         */
         private Echantillon echantillon_recuit=new Echantillon(1);
-        private N_echantillon n_echantillon_genetique=new N_echantillon(1,1);    
+        /**
+         * Variable algorithme genetique
+         */
+        private Echantillon_genetique echantillon_genetique;
+        /**
+         * Variable algorithme fourmis
+         */
 	private N_echantillon n_echantillon_fourmis=new N_echantillon(1,1);
         
-        
-        
-        
-            //Autres variables
+        /**
+         * Nombre d individus a traiter
+         */
         private int nbIndividu=1;
+        /**
+         * Nombre d echantillons a traiter
+         */
       	private int nbEchantillon=1;
+        /**
+         * Iteration d un algorithme de resolution
+         */
         private int iteration=0;
-
-   
+        /**
+         * numero de l individu en cours
+         */
         private int numeroIndividuEncours=1;
+         /**
+         * numero de l echantillon en cours
+         */
 	private int numeroEchantillonEncours=1;
         
-        
-            // Variables de sorties d'algorithme pour comparaison
+      
+        /**
+         * Variables de sorties d'algorithme pour comparaison
+         */
 	private float moyenneTempsResolution;
+        /**
+         * Variables de sorties d'algorithme pour comparaison
+         */
 	private float pourcentageReussite;
+        /**
+         * Variables de sorties d'algorithme pour comparaison
+         */
 	private float critere1;
+        /**
+         * Variables de sorties d'algorithme pour comparaison
+         */
 	private float critere2;
         
         
         
         /**
-         Constructeur
+         * Constructeur
          */
 	public Fenetre(){
 		
@@ -191,52 +261,18 @@ public class Fenetre extends JFrame {
 		this.setVisible(true);
 	}
 
-        /**
-         Dessiner toutes les n itération le meilleur résultat
-         */
-	public void meilleurIndividu(Panneau panneau){
-            // Ecrit et dessinne le score du meilleur individu
-        }
-        
-        
-        
-	public boolean isAnimated() {
-		return animated;
-	}
-
-	public void setAnimated(boolean animated) {
-		this.animated = animated;
-	}
-
-
-
-	public Thread getT() {
-		return t;
-	}
-
-
-
-	public void setT(Thread t) {
-		this.t = t;
-	}
-
 
         /**
-        Renvoie le panneau
+        * Renvoie le panneau
+        * @return Panneau
         */
 	public Panneau getPan() {
 		return pan;
 	}
 
-	public void setPan(Panneau pan) {
-		this.pan = pan;
-	}
-
-
 
 	/**
-	* Classes internes implémentant l'interface (méthode active suivant
-         l'appui d'un bouton
+	* Classe interne implémentant l'interface de l'appui du bouton selection NbE
 	*/
 	class ItemActionNbE implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
@@ -245,14 +281,18 @@ public class Fenetre extends JFrame {
 		
 		}
 		}
-	
+	/**
+	* Classe interne implémentant l'interface de l'appui du bouton selection NbI
+	*/
 	class ItemActionNbI implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
 			
 		label1.setText("action sur "+ comboBoxNbI.getSelectedItem() +" dans nombre individu " ) ;
 		}
 		}
-	
+	/**
+	* Classe interne implémentant l'interface de l'appui du bouton selection Resolution
+	*/
 	class ItemActionResol implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
 			
@@ -260,7 +300,9 @@ public class Fenetre extends JFrame {
 		}
 		}
 	
-        //Appui bouton Lancer
+        /**
+	* Classe interne implémentant l'interface de l'appui du bouton Lancer
+	*/
 	class BoutonLancerListener implements ActionListener{
 		public void actionPerformed (ActionEvent arg0) {
                         animated=true;
@@ -433,7 +475,9 @@ public class Fenetre extends JFrame {
 	}
 	
         
-        //Appui bouton arreter
+        /**
+	* Classe interne implémentant l'interface de l'appui du bouton arreter
+	*/
 	class BoutonArreterListener implements ActionListener{
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (true);
@@ -448,7 +492,9 @@ public class Fenetre extends JFrame {
 		}
 	}
 	
-        //Appui bouton Continuer
+        /**
+	* Classe interne implémentant l'interface de l'appui du bouton continuer
+	*/
 	class BoutonContinuerListener implements ActionListener{
 		
 		public void actionPerformed (ActionEvent arg0) {
@@ -459,78 +505,99 @@ public class Fenetre extends JFrame {
         
         
         
-        // Classes implétentant l'interface Runnable
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class BFS_Runnable implements Runnable{
         @Override
             public void run() {
             BFS();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class DFS_Runnable implements Runnable{
         @Override
             public void run() {
             DFS();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Greedy_Runnable implements Runnable{
         @Override
             public void run() {
             AlgorithmeGreedy();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class A_Runnable implements Runnable{
         @Override
             public void run() {
             AlgorithmeA();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Escalade_Runnable implements Runnable{
         @Override
             public void run() {
             Escalade();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Tabous_Runnable implements Runnable{
         @Override
             public void run() {
             RechercheAvecTabous();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Recuit_Runnable implements Runnable{
         @Override
             public void run() {
             RecuitSimule();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Genetique_Runnable implements Runnable{
         @Override
             public void run() {
             AlgorithmeGenetique();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Fourmis_Runnable implements Runnable{
         @Override
             public void run() {
             AlgorithmeColonieFourmis();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Proposition_Runnable implements Runnable{
         @Override
             public void run() {
             LogiqueDeProposition();
             }
             }
-        
+        /**
+	* Classe interne implémentant l'interface de lancement de l'algorithme souhaite
+	*/
         class Predicat_Runnable implements Runnable{
         @Override
             public void run() {
@@ -539,24 +606,28 @@ public class Fenetre extends JFrame {
             }
         
         
-        /*
-         * Autres méthodes
+        /**
+         * Arrondi d une valeur float
+         * @param f
+         *  float a arrondir
+         * @param i
+         *  a mettre a zero
+         * @return float arrondi
          */
          public double round(double f, int i){
             return (double)((int)(f*Math.pow(10,i)+0.5))/Math.pow(10, i);       
                     }
-        
+        /**
+         * Ecrire l'iteration en pause
+         */
          public void sendIteration(){
              label1.setText("iteration =  "+iteration);
          }
         
-        
-        
-        /*
-         * Définition des méthodes de résolution
-         */
 
-	
+	/**
+         * Resolution BFS
+         */
 	public void BFS() {
           id_BFS=new Individu();
 	
@@ -664,7 +735,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution DFS
+         */
 	public void DFS() {
 
              id_DFS=new Individu();
@@ -795,7 +868,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution Greedy
+         */
 	public void AlgorithmeGreedy() {
 		// TODO Auto-generated method stub
 		
@@ -803,7 +878,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution A
+         */
 	public void AlgorithmeA() {
 		// TODO Auto-generated method stub
 		
@@ -811,7 +888,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution escalade
+         */
 	public void Escalade() {
             // Initialisation
                 iteration=0;
@@ -894,34 +973,44 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution tabous
+         */
 	public void RechercheAvecTabous() {
                 //Initialisation
-		echantillon_tabous=new Echantillon(nbIndividu);
-                solution=false;
+		id_tabous=new Individu();
+                boolean solution=false;
                 boolean bloque=false;
                 int x=1;
                 int y=1;
                 int x_dest=x;
                 int y_dest=y;
-                int distance_Est=0;
-                int distance_Sud=0;
-                int distance_Ouest=0;
-                int distance_Nord=0;
-                int distance=0;
+                int distance_Est;
+                int distance_Sud;
+                int distance_Ouest;
+                int distance_Nord;
+                int distance=100;
+                iteration=0;
+                animated=true;
                 
                 // Boucle d'execution de l'algorithme pour chaque individu
-            for(int i=0; i<echantillon_tabous.getNbIndividu();i++){
+            
                 // Boucle de résolution
                 while((solution==false)&&(bloque==false)){
-                    if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x+1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x+1, y))){
-                        distance_Est=echantillon_tabous.getIndividu(i+1).distance(x+1, y);
+                    if(animated){
+                    x_dest=x;
+                    y_dest=y;
+                    distance=100;
+                    if(!(id_tabous.getLabyrinthe().estMur(x+1, y))&&!(id_tabous.getChemin().existeDeja(x+1, y))){
+                        distance_Est=id_tabous.distance(x+1, y);
+                        if(distance_Est<distance){
                         x_dest=x+1;
                         y_dest=y;
                         distance=distance_Est;
+                        }
                     }
-                    else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y+1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y+1))){
-                        distance_Sud=echantillon_tabous.getIndividu(i+1).distance(x, y+1);
+                    else if(!(id_tabous.getLabyrinthe().estMur(x, y+1))&&!(id_tabous.getChemin().existeDeja(x, y+1))){
+                        distance_Sud=id_tabous.distance(x, y+1);
                             if(distance_Sud<distance){
                                 x_dest=x;
                                 y_dest=y+1;
@@ -936,8 +1025,8 @@ public class Fenetre extends JFrame {
                                 }
                             }  
                         }
-                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x-1, y))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x-1, y))){
-                        distance_Ouest=echantillon_tabous.getIndividu(i+1).distance(x-1, y);
+                        else if(!(id_tabous.getLabyrinthe().estMur(x-1, y))&&!(id_tabous.getChemin().existeDeja(x-1, y))){
+                        distance_Ouest=id_tabous.distance(x-1, y);
                             if(distance_Ouest<distance){
                                 x_dest=x-1;
                                 y_dest=y;
@@ -952,8 +1041,8 @@ public class Fenetre extends JFrame {
                                 }
                             }   
                         }
-                        else if(!(echantillon_tabous.getIndividu(i+1).getLabyrinthe().estMur(x, y-1))&&!(echantillon_tabous.getIndividu(i+1).getChemin().existeDeja(x, y-1))){
-                        distance_Nord=echantillon_tabous.getIndividu(i+1).distance(x, y-1);
+                        else if(!(id_tabous.getLabyrinthe().estMur(x, y-1))&&!(id_tabous.getChemin().existeDeja(x, y-1))){
+                        distance_Nord=id_tabous.distance(x, y-1);
                             if(distance_Nord<distance){
                                 x_dest=x;
                                 y_dest=y-1;
@@ -968,19 +1057,47 @@ public class Fenetre extends JFrame {
                                 }
                             }   
                         }
-                
-                    // Test bloque
-                    if(distance==echantillon_tabous.getIndividu(i+1).distance(x, y)){
+                    System.out.println("distance " + distance);
+                    // Test bloque si la distance n a pas change
+                    if(distance==id_tabous.distance(x, y)){
                         bloque=true;
                     }
+                    x=x_dest;
+                    y=y_dest;
+                    id_tabous.getChemin().AddDeplacement(x, y);
                     
                      //Test solution
-                    solution=echantillon_tabous.getIndividu(i+1).getLabyrinthe().estArrivee(x, y);
-                     
+                    solution=id_tabous.getLabyrinthe().estArrivee(x, y);
+                    if(!solution){
+                            iteration++;
+                        }
+                    }
+                    if(iteration%10==0){
+                    if(animated){
+                     animated=false;
+                     sendIteration();
+                     boutonContinuer.setEnabled (true);
+                     getPan().setIndividu_afficher(id_tabous);
+                     getPan().repaint();
+                     if(solution){
+                        iteration++;
+                        }
+                    }
+                        System.out.println(" attente "+iteration);
+                        try {
+                    Thread .sleep(500);
+                    } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    }
+
+                    }
                 }
-            }
-               // int distance=id_escalade.distance(x, y);
+                
             
+            getPan().setIndividu_afficher(id_tabous);
+            repaint();
+            System.out.println(" bloque = "+ bloque + " ; solution = "+ solution);
         }
                 
 		
@@ -988,7 +1105,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution recuit simule
+         */
 	public void RecuitSimule() {
 		// TODO Auto-generated method stub
 		
@@ -996,15 +1115,216 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution genetique
+         */
 	public void AlgorithmeGenetique() {
-		// TODO Auto-generated method stub
+            /*******************************************************************
+            *********************** DEFINITION DES VARIABLES *******************
+            *******************************************************************/
+            
+            /******** Paramètres ******** 
+            - Nombre individu - divisible par 4 (nbIndividu)
+            - Pondération de la fonction de score (alpha)
+            - Méthode de sélection (selection)
+            - Probabilité de mutation (prob_mutation)
+            - Nombre max d'itérations (max_iterations)
+            ********* Algorithme ********
+            - Nombre d'itérations déjà effectuées (nb_iterations)
+            - Fin de l'algorithme (passage)
+            - Nombre d'individus virtuels dans le cas de la probabilité proportionnelle = selection 2 (etendue)
+            - Individu_genetique temporaire pour le tri à bulle ou des changements de place (individu_temp)
+            - Tableau d'individus_génétiques = nouvel echantillon_genetique pour la sélection, combinaison (echantillon_genetique_nouveau)
+            - Entier pour les probabilités (proba,proba2)
+            */
+            
+            double alpha = 1; // 0 : nb-cases | 1 : distance
+            int selection = 1;
+            double prob_mutation= 0.001;
+            int max_iterations = 500;
+            
+            int nb_iteration=2;
+            boolean passage = false;
+            int etendue;
+            Individu_genetique individu_temp;
+            Individu_genetique echantillon_genetique_nouveau[] = new Individu_genetique[nbIndividu/2];
+            int proba; int proba2;
+            
+            /*******************************************************************
+            ************************** BOUCLES DE CALCUL ***********************
+            *******************************************************************/
+            
+            // 1) Initialisation : on engendre aléatoirement une population Po comprenant N individus
+            echantillon_genetique = new Echantillon_genetique(nbIndividu,alpha,selection);
+            
+            // 2) Boucles d'itérations et traitement des données jusqu'à convergence ou arrêt
+            do{
+                // 2.1) Sélection : on sélectionne un sous-ensemble de la population de taille p tel que p = N/2
+                switch(selection){
+                    
+                    case 1 : // Rang = tri sur la moitié de la pop (on ne retient que la moitié supérieur)
+                        for (int i=0;i<nbIndividu/2;i++){
+                            individu_temp = echantillon_genetique.getIndividu(i);
+                            for(int j=i+1;j<nbIndividu;j++){
+                                if(echantillon_genetique.getIndividu(j).score > echantillon_genetique.getIndividu(i).score){
+                                    individu_temp = echantillon_genetique.getIndividu(j);
+                                    echantillon_genetique.setIndividu(j,echantillon_genetique.getIndividu(i));
+                                    echantillon_genetique.setIndividu(i,individu_temp);
+                                }
+                            }
+                            echantillon_genetique_nouveau[i]=individu_temp;
+                        }
+                        break;
+                    
+                    case 2 : // Tournoi = tri sur la pop. + proba pondérée + meilleur des deux         
+                        
+                        // Tri par odre de score
+                        for (int i=0;i<nbIndividu;i++){
+                            for(int j=i+1;j<nbIndividu;j++){
+                                if(echantillon_genetique.getIndividu(j).score > echantillon_genetique.getIndividu(i).score){
+                                    individu_temp = echantillon_genetique.getIndividu(j);
+                                    echantillon_genetique.setIndividu(j,echantillon_genetique.getIndividu(i));
+                                    echantillon_genetique.setIndividu(i,individu_temp);
+                                }
+                            }
+                        }
+                        
+                        // Sélection (meilleur des deux probas pondérées)
+                        for(int i=0;i<nbIndividu/2;i++){
+                            int candidats = nbIndividu-i;
+                            etendue = ((candidats)*(candidats+1))/2;
+                            proba = (int) Math.ceil(Math.random()*etendue);
+                            proba2 = (int) Math.ceil(Math.random()*etendue);
+                            
+                            if(proba2<proba){
+                                proba = proba2;
+                            }
+                            
+                            int cellule = 0;
+                            double total = 0;
+                        
+                            do{
+                                total = total + (candidats-cellule);
+                                cellule++;
+                            }while(total<proba);
+                            
+                            individu_temp = echantillon_genetique.getIndividu(cellule-1);
+                            echantillon_genetique_nouveau[i]=individu_temp;
+                            
+                            // Décalage pour ne pas reprendre deux fois le même
+                            for(int j=cellule-1;j<candidats-1;j++){
+                                echantillon_genetique.setIndividu(j, echantillon_genetique.getIndividu(j+1));
+                            }
+                            
+                            echantillon_genetique.setIndividu(candidats-1,individu_temp);
+                        }
+                        break;    
+                                          
+                    case 3 : // Probabilité        
+                        for(int i=0;i<nbIndividu/2;i++){
+                            int cellule = (int)(Math.random()*(nbIndividu-i));
+                            echantillon_genetique_nouveau[i]=echantillon_genetique.getIndividu(cellule);
+                            // décalage pour ne pas reprendre deux fois le même
+                            if(cellule!=nbIndividu-i-1){
+                                individu_temp = echantillon_genetique.getIndividu(cellule);
+                                echantillon_genetique.setIndividu(cellule,echantillon_genetique.getIndividu(nbIndividu-i-1));
+                                echantillon_genetique.setIndividu(nbIndividu-i-1,individu_temp);
+                            }
+                        }
+                        break;
+                        
+                }
+                
+                /* 2.2) Croisement : parmi ces p individus, on constitue p/2 couples qui seront alors croisés au point de collision le plus petit
+                *  Individu : 
+                *  - - - -( - - - - - -)
+                *  | |      |
+                *  0 1      croisement
+                */
+                for (int i=nbIndividu/2;i<nbIndividu;i+=2){
+                    
+                    proba = (int) (Math.random()*(nbIndividu-i));
+                    proba2 = (int) (Math.random()*(nbIndividu-i));
+                    while(proba==proba2){
+                        proba2 = (int) (Math.random()*(nbIndividu-i));
+                    }
+                    
+                    // Repérage des deux individus parents
+                    Individu_genetique individu1 = echantillon_genetique_nouveau[proba];
+                    Individu_genetique individu2 = echantillon_genetique_nouveau[proba2];
+                    int croisement = Math.min(individu1.nb_cases,individu2.nb_cases);
+                    
+                    // décalage pour ne pas reprendre deux fois le même
+                    if(proba!=nbIndividu-i-1){
+                        individu_temp = echantillon_genetique_nouveau[proba];
+                        echantillon_genetique_nouveau[proba] = echantillon_genetique_nouveau[nbIndividu-i-1];
+                        echantillon_genetique_nouveau[nbIndividu-i-1] = individu_temp;
+                    }
+                    if(proba2!=nbIndividu-i-2){
+                        individu_temp = echantillon_genetique_nouveau[proba2];
+                        echantillon_genetique_nouveau[proba2] = echantillon_genetique_nouveau[nbIndividu-i-2];
+                        echantillon_genetique_nouveau[nbIndividu-i-2] = individu_temp;
+                    }
+                    
+                    // Création des enfants 
+                    // Croisement des directions
+                    for (int j=croisement;j<individu1.longueur;j++){
+                        int temp = individu1.individu[j];
+                        individu1.individu[j]=individu2.individu[j];
+                        individu2.individu[j]=temp;
+                    }
+                    // 2.3) Mutation //(int)(Math.random()*(individu1.longueur-croisement))+croisement
+                    if(new Random().nextInt((int)(1/prob_mutation))==0){
+                        individu1.individu[croisement]=(int)(Math.random()*4);
+                    }
+                    if(new Random().nextInt((int)(1/prob_mutation))==0){
+                        individu2.individu[croisement]=(int)(Math.random()*4);
+                    }
+ 
+                    // Traduction des nouveaux enfants en termes de coordonnées + evaluation
+                    individu1.chemin.couper(croisement+1);
+                    individu2.chemin.couper(croisement+1);
+                    individu1.traduction_combinaison(croisement);
+                    individu2.traduction_combinaison(croisement);
+                    individu1.collision();
+                    individu2.collision();
+                    individu1.existence();
+                    individu2.existence();
+                    if(selection!=3){
+                        individu1.fonction_score();
+                        individu2.fonction_score();
+                    }     
+                    
+                    // Enregistrement de la nouvelle population
+                    echantillon_genetique.setIndividu(i,individu1);
+                    echantillon_genetique.setIndividu(i+1,individu2);
+                }
+                
+                // Complément de la population avec les parents
+                for (int i=0;i<nbIndividu/2;i++){
+                    echantillon_genetique.setIndividu(i,echantillon_genetique_nouveau[i]);
+                }
+
+                // 2.4) Vérification des conditions de fin
+                if(nb_iteration==max_iterations){
+                    passage=true;
+                    echantillon_genetique.afficher_meilleurIndividu(selection, passage);
+                }else{
+                    echantillon_genetique.afficher_meilleurIndividu(selection, passage);
+                }
+              
+                nb_iteration++;
+                
+            }while(passage!=true);  
+        }
 		
-	}
-
-
-
 	
+
+
+
+	/**
+         * Resolution colonie de fourmis
+         */
 	public void AlgorithmeColonieFourmis() {
 		// TODO Auto-generated method stub
 		
@@ -1012,7 +1332,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution logique de proposition
+         */
 	public void LogiqueDeProposition() {
 		// TODO Auto-generated method stub
 		
@@ -1020,7 +1342,9 @@ public class Fenetre extends JFrame {
 
 
 
-	
+	/**
+         * Resolution logique de predicats
+         */
 	public void LogiqueDePredicats() {
 		// TODO Auto-generated method stub
 		

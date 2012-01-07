@@ -1,22 +1,40 @@
+package infolaby;
 
-
+/**
+ * Individu parcourant le labyrinthe
+ */
 public class Individu{
 
+	/**
+         * Chemin de l'individu
+         */
+	private Chemin chemin = new Chemin();
 	
-	private Chemin chemin = new Chemin();	// Chemin de l'individu
-	
-        private Labyrinthe labyrinthe=new Labyrinthe(); //Matrice qui sera visualisée
+        /**
+         * Matrice du labyrinthe 
+         */
+        private Labyrinthe labyrinthe=new Labyrinthe(); 
         
-        private boolean solution=false; // labyrinthe résolu sur l'individu
+        /**
+         * vrai si Individu solution 
+         */
+        private boolean solution=false; 
         
-        private int x_dest=13; // Coordonnées de la case arrivée
+        /**
+         * Coordonnées de la case arrivée en x
+         */
+        private int x_dest=13;
+        /**
+         * Coordonnées de la case arrivée en y
+         */
         private int y_dest=13;
 
-   
-	
-	//Constructeur
+
+        /**
+         * Constructeur
+         */
 	public Individu(){ 
-		System.out.println("creation indi");
+		//System.out.println("creation indi");
             //Positionnement de départ
           
             for (int i=0;i<this.getLabyrinthe().n();i++) {
@@ -27,10 +45,18 @@ public class Individu{
                     }
                 }
             }
+            this.caseArrivee();
                 
 	}
 	
-	
+	/**
+         * Renvoi la distance entre la position actuelle et la position d'arrivee
+         * @param x
+         *      abscisse
+         * @param y 
+         *      Ordonnee
+         * @return distance en nombre de cases
+         */
         public int distance(int x, int y){
             int distance=0;
             caseArrivee();
@@ -38,23 +64,43 @@ public class Individu{
             return distance;
         }
 
-	// Accesseurs
+	/**
+         * Accesseur
+         * @return chemin
+         */
 	public Chemin getChemin(){
 		return chemin;
 	}
         
+        /**
+         * Accesseur
+         * @return Labyrinthe
+         */
         public Labyrinthe getLabyrinthe(){
             return labyrinthe;
         }
         
-         public boolean isSolution() {
+        /**
+         * Accesseur
+         * @return Vrai si l individu a trouve une solution
+         */
+        public boolean isSolution() {
         return solution;
          }
 
+        /**
+         * Mutateur
+         * 
+         * @param solution 
+         *      Definir si la solution est trouvee
+         */
         public void setSolution(boolean solution) {
             this.solution = solution;
         }
         
+         /**
+         * Enregistre les coordonnees de la case d arrive
+         */
         public void caseArrivee(){
             // Recherche case arrivée
             for (int i=0;i<this.getLabyrinthe().n();i++) {

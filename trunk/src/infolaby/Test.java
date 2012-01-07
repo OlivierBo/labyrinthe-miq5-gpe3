@@ -1,4 +1,8 @@
+package infolaby;
 
+/**
+ * Classe contenant la méthode main
+ */
 public class Test {
 
 	/**
@@ -6,10 +10,9 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		Fenetre fenetre = new Fenetre();
-		//fenetre.getPan().BFS();
                 
                 /*
-		//----------------TESTS DES FONCTIONS ------------------//
+		//----------------TESTS DES FONCTIONS ------(OBSOLETE)------------//
 		
 		//////// Test du fonctionnement des classes////////
 		
