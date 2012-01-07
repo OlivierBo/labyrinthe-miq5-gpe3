@@ -1,23 +1,31 @@
-
+package infolaby;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-	public class Panneau extends JPanel {
+/**
+ * Classe gérant l'affichage du labyrinthe
+ * @author Olivier
+ */
+public class Panneau extends JPanel {
      
-            //Autres variables
-	private int c=32; // Taille cellule
-
-            // Variable de l'individu à afficher
-        private Individu individu_afficher=new Individu(); // id_DFS par défaut
+        /**
+         * Taille cellule
+         */
+	private int c=32;
+        
+        /**
+         * Variable de l'individu à afficher
+         */
+        private Individu individu_afficher=new Individu();
 	
 
 	
 	
-        /*
-         Dessin du labyrinthe
+        /**
+         * Dessin du labyrinthe
          */
 	public void paintComponent(Graphics g){
 		//On décide d'une couleur de fond pour notre rectangle
@@ -61,33 +69,23 @@ import javax.swing.JPanel;
 		g.fillRect(xd*c+c/4, yd*c+c/4, c/2, c/2);
 		    
 	}
-        
-       
-
-
-        
-      
-
-        
-        
-         /*
-         * Accesseurs
+    
+        /**
+         * Mutateur
+         * @param ind
+         *      L individu a afficher
          */
-        
          public void setIndividu_afficher(Individu ind) {
 		this.individu_afficher = ind;
 	}
-        
+         
+         /**
+         * Accesseurs
+         * @return L Individu qui est affiche
+         */
         public Individu getIndividu_afficher(){
             return this.individu_afficher;
         }
         
-        public int getC() {
-            return c;
-        }
-
-        public void setC(int c) {
-            this.c = c;
-        }
 
 }
