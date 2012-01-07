@@ -28,7 +28,15 @@ public class Individu{
          * Coordonnées de la case arrivée en y
          */
         private int y_dest=13;
-
+        /**
+         * Score de l'individu
+         */
+        double score;
+        /**
+         * pondération de la fonction de score
+         */
+        double alpha;
+        
 
         /**
          * Constructeur
@@ -113,4 +121,11 @@ public class Individu{
             }
         }
         
+        // On évalue la qualité de chaque individu grâce à la fonction de score.
+    void fonction_score(){
+        int nb_cases=chemin.getNbcases();
+        int x = chemin.getDeplacement()[nb_cases-1][0];
+        int y = chemin.getDeplacement()[nb_cases-1][1];
+        score = 100 - 100*alpha*(Math.sqrt(Math.pow(x_dest-x,2)+Math.pow(13-y,2))/17)+(1-alpha)*(100.0*nb_cases/169);
+    }
 }
