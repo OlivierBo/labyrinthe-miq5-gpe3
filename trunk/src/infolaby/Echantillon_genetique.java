@@ -29,9 +29,10 @@ public class Echantillon_genetique {
         this.individus_genetiques[i] = indiv;
     }  
     
-    public void afficher_meilleurIndividu(int type_selection, boolean passage){
+    public boolean afficher_meilleurIndividu(int type_selection){
         double score = 0.0;
         int position = 0;
+        boolean fin=false;
         
         // Les scores n'ont jamais été calculés dans le 3e type de sélection
         if(type_selection==3){
@@ -54,7 +55,8 @@ public class Echantillon_genetique {
         if(individu_genetique.solution){
             if(individu_genetique.score>80){
                 System.out.println("- Est LA solution");
-                passage=true;
+                individu_genetique.afficher();
+                fin=true;
             }else{
                 System.out.println("- Est une solution");
             }
@@ -64,6 +66,7 @@ public class Echantillon_genetique {
         System.out.println("- Score : "+score);
         System.out.println("- Nombre bonnes cases : "+individu_genetique.nb_cases);
         System.out.println("- Chemin :");
-        //individu_genetique.afficher(); // à supprimer
+        
+        return fin;
     }
 }
