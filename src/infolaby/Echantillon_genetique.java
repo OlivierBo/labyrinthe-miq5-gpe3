@@ -69,4 +69,26 @@ public class Echantillon_genetique {
         
         return fin;
     }
+    
+    public Individu_genetique afficher_meilleurIndividuDansEchantillon(int type_selection){
+        double score = 0.0;
+        int position = 0;
+        boolean fin=false;
+        
+        // Les scores n'ont jamais été calculés dans le 3e type de sélection
+        if(type_selection==3){
+            for(int i=0;i<nbIndividu;i++){
+                individus_genetiques[i].fonction_score();
+            }
+        }
+        
+        // On recherche le meilleur individu (meilleur score )
+        for(int i=0;i<nbIndividu;i++){
+            if(individus_genetiques[i].score>score){
+                score = individus_genetiques[i].score;
+                position = i;
+            }  
+        }
+        return individus_genetiques[position];
+    }
 }

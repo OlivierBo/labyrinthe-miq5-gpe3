@@ -28,7 +28,7 @@ public class Fenetre extends JFrame {
         /**
          * JComboBox : listes déroulantes
          */
-	private JComboBox<String> comboBoxNbE = new JComboBox<>();
+	private JComboBox<String> comboBoxAlpha = new JComboBox<>();
 	private JComboBox<String> comboBoxNbI = new JComboBox<>();
 	private JComboBox<String> comboBoxTypeResolution = new JComboBox<>();
         
@@ -136,6 +136,10 @@ public class Fenetre extends JFrame {
          * numero de l echantillon en cours
          */
 	private int numeroEchantillonEncours=1;
+         /**
+         * Pondération de la fonction score
+         */
+	private double alpha=1.0;
         
       
         /**
@@ -171,11 +175,11 @@ public class Fenetre extends JFrame {
 		this.setLocationRelativeTo(null);
 		
                 // Définition des listes déroulantes
-		String[] listeE={"1","2","3","4","5","6","7","8","9","10"};
-		String[] listeI={"10","20","30","40","50","60","70","80","90","100","110","120","130","140","150","160","170","180","190","200"};
+		String[] listeA={"0","0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1"};
+		String[] listeI={"20","40","60","80","100","120","140","160","180","200"};
 		String[] listeResol ={"DFS","BFS","Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques","Algorithme de colonies de fourmis", "Logique de prpositions","Logique de prédicats"};
 		
-		comboBoxNbE = new JComboBox<>(listeE);
+		comboBoxAlpha = new JComboBox<>(listeA);
 		comboBoxNbI = new JComboBox<>(listeI);
 		comboBoxTypeResolution = new JComboBox<>(listeResol);
                 
@@ -183,9 +187,9 @@ public class Fenetre extends JFrame {
                 
                 
                 //Définition de l'écoute des commandes
-		comboBoxNbE.addActionListener(new ItemActionNbE());
-		comboBoxNbE.setPreferredSize(new Dimension(60,30));
-		comboBoxNbE.setForeground (Color.blue);
+		comboBoxAlpha.addActionListener(new ItemActionAlpha());
+		comboBoxAlpha.setPreferredSize(new Dimension(60,30));
+		comboBoxAlpha.setForeground (Color.blue);
 		
 		comboBoxNbI.addActionListener(new ItemActionNbI());
 		comboBoxNbI.setPreferredSize(new Dimension(60,30));
@@ -203,10 +207,10 @@ public class Fenetre extends JFrame {
 		// Placement des commandes du haut
 		north.setPreferredSize(new Dimension(400, 160));
 		north.setLayout(new GridLayout(3, 3 , 5 , 5));
-		north.add(new JLabel("Nombre d'échantillon"));
+		north.add(new JLabel("Alpha"));
 		north.add(new JLabel("Nombre d'individus"));
 		north.add(new JLabel("Type de résolution"));
-		north.add(comboBoxNbE);
+		north.add(comboBoxAlpha);
 		north.add(comboBoxNbI);
 		north.add(comboBoxTypeResolution);
 		north.add(boutonLancer );
@@ -274,10 +278,10 @@ public class Fenetre extends JFrame {
 	/**
 	* Classe interne implémentant l'interface de l'appui du bouton selection NbE
 	*/
-	class ItemActionNbE implements ActionListener{
+	class ItemActionAlpha implements ActionListener{
 		public void actionPerformed (ActionEvent e) {
 			
-		label1.setText("action sur "+ comboBoxNbE.getSelectedItem() +" dans Nbe Echantillon") ;
+		label1.setText("action sur "+ comboBoxAlpha.getSelectedItem() +" dans Alpha") ;
 		
 		}
 		}
@@ -308,104 +312,77 @@ public class Fenetre extends JFrame {
                         animated=true;
 			boutonLancer.setEnabled (false);
 			boutonArreter.setEnabled (true);
-			comboBoxNbE.setEnabled (false);
+			comboBoxAlpha.setEnabled (false);
 			comboBoxNbI.setEnabled (false);
 			comboBoxTypeResolution.setEnabled (false);
 			
                         //Selection nombre d'échantillon
-			switch(comboBoxNbE.getSelectedIndex()){
+			switch(comboBoxAlpha.getSelectedIndex()){
 			case 0:
-				nbEchantillon=1;
+				alpha=0.0;
 				break;
 			case 1:
-				nbEchantillon=2;
+				alpha=0.1;
 				break;
 			case 2:
-				nbEchantillon=3;
+				alpha=0.2;
 				break;
 			case 3:
-				nbEchantillon=4;
+				alpha=0.3;
 				break;
 			case 4:
-				nbEchantillon=5;
+				alpha=0.4;
 				break;
 			case 5:
-				nbEchantillon=6;
+				alpha=0.5;
 				break;
 			case 6:
-				nbEchantillon=7;
+				alpha=0.6;
 				break;
 			case 7:
-				nbEchantillon=8;
+				alpha=0.7;
 				break;
 			case 8:
-				nbEchantillon=9;
+				alpha=0.8;
 				break;
 			case 9:
-				nbEchantillon=10;
+				alpha=0.9;
+				break;
+                        case 10:
+				alpha=1.0;
 				break;
 			}
 			
                         //Selection nombre d'individus
 			switch(comboBoxNbI.getSelectedIndex()){
 			case 0:
-				nbIndividu=10;
-				break;
-			case 1:
 				nbIndividu=20;
 				break;
-			case 2:
-				nbIndividu=30;
-				break;
-			case 3:
+			case 1:
 				nbIndividu=40;
 				break;
-			case 4:
-				nbIndividu=50;
-				break;
-			case 5:
+			case 2:
 				nbIndividu=60;
 				break;
-			case 6:
-				nbIndividu=70;
-				break;
-			case 7:
+			case 3:
 				nbIndividu=80;
 				break;
-			case 8:
-				nbIndividu=90;
-				break;
-			case 9:
+			case 4:
 				nbIndividu=100;
 				break;
-			case 10:
-				nbIndividu=110;
-				break;
-			case 11:
+			case 5:
 				nbIndividu=120;
 				break;
-			case 12:
-				nbIndividu=130;
-				break;
-			case 13:
+			case 6:
 				nbIndividu=140;
 				break;
-			case 14:
-				nbIndividu=150;
-				break;
-			case 15:
+			case 7:
 				nbIndividu=160;
 				break;
-			case 16:
-				nbIndividu=170;
-				break;
-			case 17:
+			case 8:
 				nbIndividu=180;
 				break;
-			case 18:
-				nbIndividu=190;
-				break;
-			case 19:
+			case 9:
 				nbIndividu=200;
 				break;
 			}
@@ -414,42 +391,35 @@ public class Fenetre extends JFrame {
                     // Selection type de résolution
                     switch(comboBoxTypeResolution.getSelectedIndex()){
                     case 0:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new DFS_Runnable());
                             break;
                     case 1:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new BFS_Runnable());
                             break;
 
                     case 2:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new Greedy_Runnable());
                             break;
 
                     case 3:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new A_Runnable());
                             break;
 
                     case 4:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new Escalade_Runnable());
                             break;
 
                     case 5:
-                            nbEchantillon=1;
                             nbIndividu=1;
                             t=new Thread(new Tabous_Runnable());
                             break;
 
                     case 6:
-                            nbEchantillon=1;
                             t=new Thread(new Recuit_Runnable());
                             break;
 
@@ -469,7 +439,7 @@ public class Fenetre extends JFrame {
                             t=new Thread(new Predicat_Runnable());
                             break;
                     }
-                    System.out.println("Parametres d'execution :   Algo " +comboBoxTypeResolution.getSelectedItem()+ " ; NbI =  " + nbIndividu + " ; NbE = " + nbEchantillon);
+                    System.out.println("Parametres d'execution :   Algo " +comboBoxTypeResolution.getSelectedItem()+ " ; NbI =  " + nbIndividu + " ; Alpha = " + alpha);
                     t.start();
 		}
 	}
@@ -482,7 +452,7 @@ public class Fenetre extends JFrame {
 		public void actionPerformed (ActionEvent arg0) {
 			boutonLancer.setEnabled (true);
 			boutonArreter.setEnabled (false);
-			comboBoxNbE.setEnabled (true);
+			comboBoxAlpha.setEnabled (true);
 			comboBoxNbI.setEnabled (true);
 			comboBoxTypeResolution.setEnabled (true);
                         boutonContinuer.setEnabled(false);
@@ -728,7 +698,7 @@ public class Fenetre extends JFrame {
             System.out.println("distance parcourue= "+id_BFS.getChemin().getNbcases());
             boutonLancer.setEnabled (true);
             boutonArreter.setEnabled (false);
-            comboBoxNbE.setEnabled (true);
+            comboBoxAlpha.setEnabled (true);
             comboBoxNbI.setEnabled (true);
             comboBoxTypeResolution.setEnabled (true);
 	}
@@ -860,7 +830,7 @@ public class Fenetre extends JFrame {
             sendIteration();
             boutonLancer.setEnabled (true);
             boutonArreter.setEnabled (false);
-            comboBoxNbE.setEnabled (true);
+            comboBoxAlpha.setEnabled (true);
             comboBoxNbI.setEnabled (true);
             comboBoxTypeResolution.setEnabled (true);
 		
@@ -966,7 +936,7 @@ public class Fenetre extends JFrame {
                 sendIteration();
                 boutonLancer.setEnabled (true);
                 boutonArreter.setEnabled (false);
-		comboBoxNbE.setEnabled (true);
+		comboBoxAlpha.setEnabled (true);
                 comboBoxNbI.setEnabled (true);
 		comboBoxTypeResolution.setEnabled (true);
 	}
@@ -1138,8 +1108,7 @@ public class Fenetre extends JFrame {
             - Tableau d'individus_génétiques = nouvel echantillon_genetique pour la sélection, combinaison (echantillon_genetique_nouveau)
             - Entier pour les probabilités (proba,proba2)
             */
-            System.out.println("Init");
-            double alpha = 1; // 0 : nb-cases | 1 : distance
+            //double alpha = 1; // 0 : nb-cases | 1 : distance
             int selection = 2;
             double prob_mutation= 0.01;
             int max_iterations = 300;
@@ -1157,7 +1126,6 @@ public class Fenetre extends JFrame {
             
             // 1) Initialisation : on engendre aléatoirement une population Po comprenant N individus
             echantillon_genetique = new Echantillon_genetique(nbIndividu,alpha,selection);
-            System.out.println("Fin Init");
             // 2) Boucles d'itérations et traitement des données jusqu'à convergence ou arrêt
             do{
                 // 2.1) Sélection : on sélectionne un sous-ensemble de la population de taille p tel que p = N/2
@@ -1178,7 +1146,6 @@ public class Fenetre extends JFrame {
                         break;
                     
                     case 2 : // Tournoi = tri sur la pop. + proba pondérée + meilleur des deux         
-                        System.out.println("tournoi");
                         // Tri par odre de score
                         for (int i=0;i<nbIndividu;i++){
                             for(int j=i+1;j<nbIndividu;j++){
@@ -1219,7 +1186,6 @@ public class Fenetre extends JFrame {
                             
                             echantillon_genetique.setIndividu(candidats-1,individu_temp);
                         }
-                        System.out.println("Selec");
                         break;    
                                           
                     case 3 : // Probabilité        
@@ -1247,6 +1213,7 @@ public class Fenetre extends JFrame {
                     
                     proba = (int)(Math.random()*(nbIndividu-i));
                     proba2 = (int)(Math.random()*(nbIndividu-i));
+                    
                     while(proba==proba2){
                         proba2 = (int)(Math.random()*(nbIndividu-i));
                     }
@@ -1300,26 +1267,30 @@ public class Fenetre extends JFrame {
                     // Enregistrement de la nouvelle population
                     echantillon_genetique.setIndividu(i,individu1);
                     echantillon_genetique.setIndividu(i+1,individu2);
-                    
                 }
-                System.out.println("Croisement");
                 // Complément de la population avec les parents
                 for (int i=0;i<nbIndividu/2;i++){
                     echantillon_genetique.setIndividu(i,echantillon_genetique_nouveau[i]);
                 }
-                System.out.println("Inc");
                 nb_iteration++;
+                System.out.println("iteration : "+nb_iteration);
 
                 // 2.4) Vérification des conditions de fin
                 if(nb_iteration==max_iterations){System.out.println("it max");
                     passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                     passage=true;
-                }else{System.out.println("Solution");
+                }else{
                     passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 }
                 
-            }while(passage!=true); 
-            System.out.println("Fin algo");
+            }while(passage!=true);
+            Individu_genetique ind=echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
+            ind.collision();
+            ind.existence();
+            int nbcases=ind.getNbcases();
+            ind.getChemin().couper(nbcases);
+            getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
+            repaint();
         }
 		
 	

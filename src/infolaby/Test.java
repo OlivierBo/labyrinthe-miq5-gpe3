@@ -11,6 +11,15 @@ public class Test {
 	public static void main(String[] args) {
 		Fenetre fenetre = new Fenetre();
                 
+                System.out.println("Test liste des coordonnées des murs");
+                fenetre.getPan().getIndividu_afficher().getLabyrinthe().doListMurs();
+                int[][] lmurs=fenetre.getPan().getIndividu_afficher().getLabyrinthe().getListeMurs();
+                for(int i=0;i<lmurs.length;i++){
+                    System.out.println(lmurs[i][0]);
+                    System.out.println(lmurs[i][1]);
+                    System.out.println("------");
+                }
+                
                 /*
 		//----------------TESTS DES FONCTIONS ------(OBSOLETE)------------//
 		
