@@ -113,5 +113,21 @@ public class Individu_genetique {
             System.out.println(deplacement[i][0]+","+deplacement[i][1]+" | ");
         }
     }
+     
+        /**
+         * Accesseur
+         * @return chemin
+         */
+	public Chemin getChemin(){
+		return chemin;
+	}
         
+        
+        /**
+         * Accesseur
+         * @return nb_cases
+         */
+	public int getNbcases(){
+		return nb_cases;
+	}
 }
