@@ -1311,7 +1311,7 @@ public class Fenetre extends JFrame {
          * Resolution logique de proposition
          */
 	public void LogiqueDeProposition() {
-		LabyrintheP p = Labyrinthe.laby4();
+		LabyrintheProposition p = LabyrintheProposition.laby4();
         //System.out.println(p);
         //System.out.println(p.formatClauses());
         int[] sol = p.premiereSol();
