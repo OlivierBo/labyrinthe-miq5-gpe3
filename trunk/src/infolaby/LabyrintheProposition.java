@@ -25,7 +25,7 @@ public class LabyrintheProposition extends SatProblem {
     public int[] mursX;
     public int[] mursY;
 
-    public LabyrintheP(int tmax, int nbrL, int nbrC, int[] mursX, int[] mursY, int xi, int yi, int xf, int yf) {
+    public LabyrintheProposition(int tmax, int nbrL, int nbrC, int[] mursX, int[] mursY, int xi, int yi, int xf, int yf) {
         super(tmax * nbrL * nbrC);
         this.tmax = tmax;
         this.nbrCol = nbrC;
@@ -198,47 +198,47 @@ public void casesPossible() {
     return decode.toString();*/
     /* MAIN pour lancer le fichier */
 
-    public static LabyrintheP laby1() {
+    public static LabyrintheProposition laby1() {
 //        int[] mursX = new int[1];
 //        int[] mursY = new int[1];
         int[] mursX = {0, 1, 2, 3, 4, 0, 4, 0, 1, 3, 4, 0, 4, 0, 1, 2, 3, 4};
         int[] mursY = {0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4};
 //        mursX[0] = 0;
 //        mursY[0] = 1;
-        LabyrintheP lab = new Labyrinthe(6, 5, 5, mursX, mursY, 1, 1, 3, 3);
+        LabyrintheProposition lab = new LabyrintheProposition(6, 5, 5, mursX, mursY, 1, 1, 3, 3);
         return lab;
     }
 
-    public static LabyrintheP laby2() {
+    public static LabyrintheProposition laby2() {
 //        int[] mursX = new int[1];
 //        int[] mursY = new int[1];
         int[] mursX = {0};
         int[] mursY = {1};
 //        mursX[0] = 0;
 //        mursY[0] = 1;
-        LabyrintheP lab = new Labyrinthe(3, 2, 2, mursX, mursY, 0, 0, 1, 1);
+        LabyrintheProposition lab = new LabyrintheProposition(3, 2, 2, mursX, mursY, 0, 0, 1, 1);
         return lab;
     }
 
-    public static LabyrintheP laby3() {
+    public static LabyrintheProposition laby3() {
 //        int[] mursX = new int[1];
 //        int[] mursY = new int[1];
         int[] mursX = {0,1,2,3,0,2,3,0,3,0,1,2,3};
         int[] mursY = {0,0,0,0,1,1,1,2,2,3,3,3,3};
 //        mursX[0] = 0;
 //        mursY[0] = 1;
-        LabyrintheP lab = new Labyrinthe(5, 4, 4, mursX, mursY, 1, 1, 2, 2);
+        LabyrintheProposition lab = new LabyrintheProposition(5, 4, 4, mursX, mursY, 1, 1, 2, 2);
         return lab;
     }
     
-        public static LabyrintheP laby4() {
+        public static LabyrintheProposition laby4() {
 //        int[] mursX = new int[1];
 //        int[] mursY = new int[1];
         int[] mursX = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,12,12,12,12,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14};
         int[] mursY = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,0,14,0,2,3,4,6,7,8,9,10,11,12,14,0,6,10,14,0,2,4,6,8,10,12,13,14,0,2,4,8,10,14,0,2,4,5,6,8,10,11,12,13,14,0,6,8,12,14,0,1,2,3,4,6,7,8,9,10,12,14,0,6,12,14,0,2,3,4,5,6,8,10,11,12,14,0,2,8,10,14,0,2,4,5,6,8,10,12,14,0,8,12,14,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
 //        mursX[0] = 0;
 //        mursY[0] = 1;
-        LabyrintheP lab = new Labyrinthe(40, 15, 15, mursX, mursY, 1, 1, 13, 13);
+        LabyrintheProposition lab = new LabyrintheProposition(40, 15, 15, mursX, mursY, 1, 1, 13, 13);
         return lab;
     }
 //    public static void main(String[] args) {
