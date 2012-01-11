@@ -181,6 +181,9 @@ public void casesPossible() {
         int[] decode = this.decomposeVar(numVar);
         return "V[" + decode[1] + "," + decode[0] + "," + decode[2] + "]";
     }
+    
+    
+   
     /*
     @Override
     public String formatSol(int[] sol) {

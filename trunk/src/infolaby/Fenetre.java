@@ -1344,7 +1344,13 @@ public class Fenetre extends JFrame {
         //System.out.println(p.formatSol(sol));
 
         //System.out.println(p.affichePremiedecodeSolutions(3));
-		
+		Individu ind_propo=new Individu();
+                for(int i=0;i<sol1.length;i++){
+                    int[] decode=p.decomposeVar(sol1[i]);
+                    ind_propo.getChemin().AddDeplacement(decode[1], decode[0]);
+                }
+                getPan().setIndividu_afficher(ind_propo);
+                repaint();
 	}
 
 
