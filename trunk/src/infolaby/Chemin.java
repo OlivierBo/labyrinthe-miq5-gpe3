@@ -32,11 +32,11 @@ public class Chemin {
          * Mise a jour du nombre de cases explorees
          */
 	public void updateNbcase(){
-                /*int i=0;
-		while(i<this.getDeplacement().length){
-			i++;
-		}
-		this.nbcases=i;*/
+//                int i=0;
+//		while(i<this.getDeplacement().length){
+//			i++;
+//		}
+//		this.nbcases=i;
             this.nbcases = this.getDeplacement().length;
 	}
 	
@@ -120,5 +120,15 @@ public class Chemin {
             }
             deplacement=nouveau;
             this.updateNbcase();
+ 
+        }
+
+        public int get_last_x(){
+            return deplacement[nbcases-1][0];
+        }
+	
+        public int get_last_y(){
+            return deplacement[nbcases-1][1];
         }
 }
+

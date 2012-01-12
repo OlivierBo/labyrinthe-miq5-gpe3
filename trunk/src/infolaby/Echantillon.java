@@ -81,5 +81,7 @@ public class Echantillon {
 		this.resolu=type;
 	}
 
-        
+        public void setInd(Individu individu, int i){
+		individus[i]=individu;
+	}
 }
