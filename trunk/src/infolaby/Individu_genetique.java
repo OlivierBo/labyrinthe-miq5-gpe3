@@ -103,7 +103,7 @@ public class Individu_genetique {
     void fonction_score(){
         int x = chemin.getDeplacement()[nb_cases-1][0];
         int y = chemin.getDeplacement()[nb_cases-1][1];
-        score = 100 - 100*alpha*(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2))/17)+(1-alpha)*(100.0*nb_cases/169);
+        score = 100 - 100*alpha*(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2))/17)-(1-alpha)*(100.0*(169-nb_cases)/169);
     }
     
     // On affiche les coordonnées successives du chemin retenu

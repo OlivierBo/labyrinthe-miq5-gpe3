@@ -283,6 +283,9 @@ public class Fenetre extends JFrame {
             comboBoxAlpha.setEnabled(false);
             comboBoxNbI.setEnabled(false);
             comboBoxTypeResolution.setEnabled(false);
+             getPan().init_matrice();
+             getPan().setIndividu_afficher(new Individu());
+             repaint();
 
             //Selection nombre d'échantillon
             switch (comboBoxAlpha.getSelectedIndex()) {
@@ -1126,6 +1129,7 @@ public class Fenetre extends JFrame {
         int proba;
         int proba2;
         iteration=1;
+        Individu_genetique ind = new Individu_genetique(alpha,2);
         /*******************************************************************
          ************************** BOUCLES DE CALCUL ***********************
          *******************************************************************/
@@ -1277,49 +1281,51 @@ public class Fenetre extends JFrame {
             for (int i = 0; i < nbIndividu / 2; i++) {
                 echantillon_genetique.setIndividu(i, echantillon_genetique_nouveau[i]);
             }
+            System.out.println(nb_iteration);
             nb_iteration++;
-
+            
             // 2.4) Vérification des conditions de fin
             if (nb_iteration == max_iterations) {
                 
                 passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 passage = true;
             } else {
-                //passage = echantillon_genetique.afficher_meilleurIndividu(selection);
-            }
-            if(iteration % 101 == 0 && passage==false) {
+                passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 
-                    animated = false;
-                    sendIteration();
-                    boutonContinuer.setEnabled(true);
-                    Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
-                    ind.collision();
-                    ind.existence();
-                    int nbcases = ind.getNbcases();
-                    ind.getChemin().couper(nbcases);
-                    getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
-                    repaint();
-                    if (solution) {
-                        iteration++;
-                    }
-                while(!animated){
-                System.out.println(" attente " + iteration);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                
-                }
-                iteration++;
             }
-            else{
-                iteration++;
-            }   
+//            if(iteration % 101 == 0 && passage==false) {
+//                
+//                    animated = false;
+//                    sendIteration();
+//                    boutonContinuer.setEnabled(true);
+//                    Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
+//                    ind.collision();
+//                    ind.existence();
+//                    int nbcases = ind.getNbcases();
+//                    ind.getChemin().couper(nbcases);
+//                    getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
+//                    repaint();
+//                    if (solution) {
+//                        iteration++;
+//                    }
+//                while(!animated){
+//                System.out.println(" attente " + iteration);
+//                try {
+//                    Thread.sleep(500);
+//                } catch (InterruptedException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//                
+//                }
+//                iteration++;
+//            }
+//            else{
+//                iteration++;
+//            }   
             
         } while (passage != true);
-        Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
+         ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
         ind.collision();
         ind.existence();
         int nbcases = ind.getNbcases();
