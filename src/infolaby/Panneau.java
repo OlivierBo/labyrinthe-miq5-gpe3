@@ -66,11 +66,11 @@ public class Panneau extends JPanel {
 				    g.setColor(Color.red);
 				    g.fillRect(x*c, y*c, c, c);
 				}
-                                //if(coeffPheromone[y][x]!=0.0){
+                                
                                     Color z=new Color((float)0.0,(float)0.0,(float)1.0,(float)coeffPheromone[y][x]);
                                     g.setColor(z);
 				    g.fillRect(x*c, y*c, c, c); 
-                               //}
+                               
 			}
 		}
                 // On prend le déplacement de l'individu et on le dessine
