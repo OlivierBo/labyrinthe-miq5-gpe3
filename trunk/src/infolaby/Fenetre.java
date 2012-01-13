@@ -49,7 +49,6 @@ public class Fenetre extends JFrame {
      */
     private JLabel label1 = new JLabel("");
     private JLabel labelE = new JLabel("");
-
     /**
      * Boolean en cours d'animation ? selon l'etat, met en pause la résolution
      */
@@ -99,6 +98,10 @@ public class Fenetre extends JFrame {
      */
     private Echantillon echantillon_fourmis = new Echantillon(1);
     /**
+     * Variable algorithme genetique
+     */
+    private Individu ind_propo = new Individu();
+    /**
      * Nombre d individus a traiter
      */
     private int nbIndividu = 1;
@@ -111,14 +114,6 @@ public class Fenetre extends JFrame {
      */
     private int iteration = 0;
     /**
-     * numero de l individu en cours
-     */
-    private int numeroIndividuEncours = 1;
-    /**
-     * numero de l echantillon en cours
-     */
-    private int numeroEchantillonEncours = 1;
-    /**
      * Pondération de la fonction score
      */
     private double alpha = 1.0;
@@ -127,23 +122,20 @@ public class Fenetre extends JFrame {
      */
     private float moyenneTempsResolution;
     /**
-     * Variables de sorties d'algorithme pour comparaison
+     * Allocation memoire de l'algorithme
      */
-    private float pourcentageReussite;
+    private long memoire;
     /**
-     * Variables de sorties d'algorithme pour comparaison
+     * Temps de la résolution
      */
-    private float critere1;
-    /**
-     * Variables de sorties d'algorithme pour comparaison
-     */
-    private float critere2;
+    private long temps;
+    long tempspausedeb;
+    long tempspausefin;
 
     /**
      * Constructeur
      */
     public Fenetre() {
-
         /*
         Définition de la fenetre
          */
@@ -155,7 +147,7 @@ public class Fenetre extends JFrame {
         // Définition des listes déroulantes
         String[] listeA = {"0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"};
         String[] listeI = {"20", "40", "60", "80", "100", "120", "140", "160", "180", "200"};
-        String[] listeResol = {"DFS", "BFS", "Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques", "Algorithme de colonies de fourmis", "Logique de prpositions", "Logique de prédicats"};
+        String[] listeResol = {"DFS", "BFS", "Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques", "Algorithme de colonies de fourmis", "Logique de propositions", "Logique de prédicats"};
 
         comboBoxAlpha = new JComboBox<>(listeA);
         comboBoxNbI = new JComboBox<>(listeI);
@@ -283,9 +275,9 @@ public class Fenetre extends JFrame {
             comboBoxAlpha.setEnabled(false);
             comboBoxNbI.setEnabled(false);
             comboBoxTypeResolution.setEnabled(false);
-             getPan().init_matrice();
-             getPan().setIndividu_afficher(new Individu());
-             repaint();
+            getPan().init_matrice();
+            getPan().setIndividu_afficher(new Individu());
+            repaint();
 
             //Selection nombre d'échantillon
             switch (comboBoxAlpha.getSelectedIndex()) {
@@ -451,7 +443,23 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            id_BFS = new Individu();
+            iteration = 1;
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             BFS();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_BFS);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_BFS);
         }
     }
 
@@ -462,7 +470,23 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            id_DFS = new Individu();
+            iteration = 1;
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             DFS();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_DFS);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_DFS);
         }
     }
 
@@ -473,7 +497,21 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             AlgorithmeGreedy();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_greedy);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_greedy);
         }
     }
 
@@ -484,7 +522,21 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long debT = System.currentTimeMillis();
+            long deb = Runtime.getRuntime().freeMemory();
             AlgorithmeA();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_A);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_A);
         }
     }
 
@@ -495,7 +547,23 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            iteration = 1;
+            id_escalade = new Individu();
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             Escalade();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_escalade);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_escalade);
         }
     }
 
@@ -506,7 +574,23 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            id_tabous = new Individu();
+            iteration = 1;
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             RechercheAvecTabous();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(id_tabous);
+            getPan().repaint();
+            sendIteration();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(id_tabous);
         }
     }
 
@@ -517,7 +601,12 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             RecuitSimule();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
         }
     }
 
@@ -528,7 +617,12 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             AlgorithmeGenetique();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
         }
     }
 
@@ -539,7 +633,12 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             AlgorithmeColonieFourmis();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
         }
     }
 
@@ -550,7 +649,20 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             LogiqueDeProposition();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
+            getPan().setIndividu_afficher(ind_propo);
+            repaint();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(ind_propo);
         }
     }
 
@@ -561,7 +673,12 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            tempspausefin = 0;
+            long deb = Runtime.getRuntime().freeMemory();
+            long debT = System.currentTimeMillis();
             LogiqueDePredicats();
+            memoire = deb - Runtime.getRuntime().freeMemory();
+            temps = System.currentTimeMillis() - debT - tempspausefin;
         }
     }
 
@@ -584,26 +701,61 @@ public class Fenetre extends JFrame {
         label1.setText("iteration =  " + iteration);
     }
 
-    public void writeScore(String str){
+    public void writeScore(String str) {
         labelE.setText(str);
     }
-    
-    public void ScoreExploration(Individu ind){
-        double score=0.0;
+
+    public void ScoreExploration(Individu ind) {
+        double score = 0.0;
         int x = ind.getChemin().get_last_x();
         int y = ind.getChemin().get_last_y();
-        int nbcases=ind.getChemin().getNbcases()-1;
-        score = 100*alpha*(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2))/17)+(1-alpha)*(100.0*nbcases/169);
-        writeScore("<html> Résultats de l'individu <br> Nombre de cases explorées : "+nbcases+"<br> Distance : "+(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2)))+"<br> Score : "+score+"</html>");
+        int nbcases = ind.getChemin().getNbcases();
+        score = 100 - 100 * alpha * (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2)) / 17) - (1 - alpha) * (100.0 * (169 - nbcases) / 169);
+        writeScore("<html> Résultats de l'individu <br> solution : " + solution + "<br> Nombre de cases explorées : " + nbcases + "<br> Distance : " + (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2))) + "<br> Score : " + score + "<br> Memoire : " + (double) ((double) (memoire) / (1048576.0)) + "<br> Temps : " + (double) (temps) / 1000.0 + "</html>");
     }
-    
-    
+
+    public double doScore(Individu ind) {
+        double score = 0.0;
+        int x = ind.getChemin().get_last_x();
+        int y = ind.getChemin().get_last_y();
+        int nbcases = ind.getChemin().getNbcases();
+        score = 100 - 100 * alpha * (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2)) / 17) - (1 - alpha) * (100.0 * (169 - nbcases) / 169);
+        return score;
+    }
+
+    public void pause(Individu id, int iter) {
+        if (iteration % iter == 0) {
+            tempspausedeb = System.currentTimeMillis();
+            animated = false;
+            sendIteration();
+            boutonContinuer.setEnabled(true);
+            getPan().setIndividu_afficher(id);
+            getPan().repaint();
+            if (solution) {
+                iteration++;
+            }
+            while (!animated) {
+                System.out.println(" attente " + iteration);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+            iteration++;
+            tempspausefin = tempspausefin + System.currentTimeMillis() - tempspausedeb;
+        } else {
+            iteration++;
+        }
+    }
+
     /**
      * Resolution BFS
      */
     public void BFS() {
-        id_BFS = new Individu();
-        iteration=1;
+
         //Matrice permettant de mémoriser les positions
         int[][] mem_positionX = new int[40][40];
         int[][] mem_positionY = new int[40][40];
@@ -696,43 +848,13 @@ public class Fenetre extends JFrame {
 
                 }
             }
-            if(iteration % 10 == 0) {
-                
-                    animated = false;
-                    sendIteration();
-                    boutonContinuer.setEnabled(true);
-                    getPan().setIndividu_afficher(id_BFS);
-                    getPan().repaint();
-                    if (solution) {
-                        iteration++;
-                    }
-                while(!animated){
-                System.out.println(" attente " + iteration);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                
-                }
-                iteration++;
-            }
-            else{
-                iteration++;
-            }
-            
+            pause(id_BFS, 10);
+
         }
         for (i = 0; i < id_BFS.getChemin().getNbcases(); i++) {
             System.out.println(id_BFS.getChemin().getDeplacement()[i][0] + " " + id_BFS.getChemin().getDeplacement()[i][1]);
         }
         System.out.println("distance parcourue= " + id_BFS.getChemin().getNbcases());
-        boutonLancer.setEnabled(true);
-        boutonArreter.setEnabled(false);
-        comboBoxAlpha.setEnabled(true);
-        comboBoxNbI.setEnabled(true);
-        comboBoxTypeResolution.setEnabled(true);
-        ScoreExploration(id_BFS);
     }
 
     /**
@@ -740,8 +862,7 @@ public class Fenetre extends JFrame {
      */
     public void DFS() {
 
-        id_DFS = new Individu();
-        iteration = 0;
+
         //Matrice permettant de mémoriser les positions
         //int[][] mem_positionX = new int[40][40];
         //int[][] mem_positionY = new int[40][40];
@@ -774,78 +895,59 @@ public class Fenetre extends JFrame {
         solution = id_DFS.getLabyrinthe().estArrivee(x, y);
 
         while (solution == false) {
-            if (animated) {
-                //Si possible, se déplacer à l'Est par rapport à la position mémorisée par i 
-                if (aucune_solution[x + 1][y] == false && id_DFS.getChemin().existeDeja(x + 1, y) == false && id_DFS.getLabyrinthe().estMur(x + 1, y) == false) {
-                    //Se déplacer et enregistrer position en i+1
-                    id_DFS.getChemin().AddDeplacement(x + 1, y);
-                    pos_precX[x + 1][y] = x;
-                    pos_precY[x + 1][y] = y;
-                    x = x + 1;
-                    iteration++;
-                } // sinon se déplacer au Sud ou au Nord ou à l'Ouest...
-                else {
-                    if (aucune_solution[x][y + 1] == false && id_DFS.getChemin().existeDeja(x, y + 1) == false && id_DFS.getLabyrinthe().estMur(x, y + 1) == false) {
-                        id_DFS.getChemin().AddDeplacement(x, y + 1);
-                        pos_precX[x][y + 1] = x;
-                        pos_precY[x][y + 1] = y;
-                        y = y + 1;
-                        iteration++;
-                    } else { //deplacement à l'Ouest
-                        if (aucune_solution[x - 1][y] == false && id_DFS.getChemin().existeDeja(x - 1, y) == false && id_DFS.getLabyrinthe().estMur(x - 1, y) == false) {
-                            id_DFS.getChemin().AddDeplacement(x - 1, y);
+
+            //Si possible, se déplacer à l'Est par rapport à la position mémorisée par i 
+            if (aucune_solution[x + 1][y] == false && id_DFS.getChemin().existeDeja(x + 1, y) == false && id_DFS.getLabyrinthe().estMur(x + 1, y) == false) {
+                //Se déplacer et enregistrer position en i+1
+                id_DFS.getChemin().AddDeplacement(x + 1, y);
+                pos_precX[x + 1][y] = x;
+                pos_precY[x + 1][y] = y;
+                x = x + 1;
+
+            } // sinon se déplacer au Sud ou au Nord ou à l'Ouest...
+            else {
+                if (aucune_solution[x][y + 1] == false && id_DFS.getChemin().existeDeja(x, y + 1) == false && id_DFS.getLabyrinthe().estMur(x, y + 1) == false) {
+                    id_DFS.getChemin().AddDeplacement(x, y + 1);
+                    pos_precX[x][y + 1] = x;
+                    pos_precY[x][y + 1] = y;
+                    y = y + 1;
+
+                } else { //deplacement à l'Ouest
+                    if (aucune_solution[x - 1][y] == false && id_DFS.getChemin().existeDeja(x - 1, y) == false && id_DFS.getLabyrinthe().estMur(x - 1, y) == false) {
+                        id_DFS.getChemin().AddDeplacement(x - 1, y);
+                        getPan().setIndividu_afficher(id_DFS);
+                        getPan().repaint();
+                        pos_precX[x - 1][y] = x;
+                        pos_precY[x - 1][y] = y;
+                        x = x - 1;
+
+                    } else { //deplacement au Nord
+                        if (aucune_solution[x][y - 1] == false && id_DFS.getChemin().existeDeja(x, y - 1) == false && id_DFS.getLabyrinthe().estMur(x, y - 1) == false) {
+                            id_DFS.getChemin().AddDeplacement(x, y - 1);
                             getPan().setIndividu_afficher(id_DFS);
                             getPan().repaint();
-                            pos_precX[x - 1][y] = x;
-                            pos_precY[x - 1][y] = y;
-                            x = x - 1;
-                            iteration++;
-                        } else { //deplacement au Nord
-                            if (aucune_solution[x][y - 1] == false && id_DFS.getChemin().existeDeja(x, y - 1) == false && id_DFS.getLabyrinthe().estMur(x, y - 1) == false) {
-                                id_DFS.getChemin().AddDeplacement(x, y - 1);
-                                getPan().setIndividu_afficher(id_DFS);
-                                getPan().repaint();
-                                pos_precX[x][y - 1] = x;
-                                pos_precY[x][y - 1] = y;
-                                y = y - 1;
-                                iteration++;
-                            } else {
-                                //Si aucune position possible alors
-                                //Enregistrer la position comme ayant aucun débouché de solution
-                                aucune_solution[x][y] = true;
-                                //Remonter à l'étape i-1 
-                                tamponX = pos_precX[x][y];
-                                tamponY = pos_precY[x][y];
-                                x = tamponX;
-                                y = tamponY;
-                                id_DFS.getChemin().AddDeplacement(x, y);
-                                iteration++;
-                            }
+                            pos_precX[x][y - 1] = x;
+                            pos_precY[x][y - 1] = y;
+                            y = y - 1;
+
+                        } else {
+                            //Si aucune position possible alors
+                            //Enregistrer la position comme ayant aucun débouché de solution
+                            aucune_solution[x][y] = true;
+                            //Remonter à l'étape i-1 
+                            tamponX = pos_precX[x][y];
+                            tamponY = pos_precY[x][y];
+                            x = tamponX;
+                            y = tamponY;
+                            id_DFS.getChemin().AddDeplacement(x, y);
                         }
                     }
                 }
             }
-            solution = id_DFS.getLabyrinthe().estArrivee(x, y);
-            if (iteration % 10 == 0) {
-                if (animated) {
-                    animated = false;
-                    sendIteration();
-                    boutonContinuer.setEnabled(true);
-                    getPan().setIndividu_afficher(id_DFS);
-                    getPan().repaint();
-                    if (solution) {
-                        iteration++;
-                    }
-                }
-                System.out.println(" attente " + iteration);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
 
-            }
+            solution = id_DFS.getLabyrinthe().estArrivee(x, y);
+
+            pause(id_DFS, 10);
         }
         for (i = 0; i < id_DFS.getChemin().getNbcases(); i++) {
             System.out.println(id_DFS.getChemin().getDeplacement()[i][0] + " " + id_DFS.getChemin().getDeplacement()[i][1]);
@@ -881,8 +983,6 @@ public class Fenetre extends JFrame {
      */
     public void Escalade() {
         // Initialisation
-        iteration = 0;
-        id_escalade = new Individu();
         solution = false;
         boolean bloque = false;
         int x = 1;
@@ -892,68 +992,37 @@ public class Fenetre extends JFrame {
 
         // Boucle pour le déplacement    
         while ((solution == false) && (bloque == false)) {
-            if (animated) {
-                // Recherche du meilleur voisin
-                if (!id_escalade.getLabyrinthe().estMur(x + 1, y) && (distance > id_escalade.distance(x + 1, y))) { // Test à l'Est
-                    x = x + 1;
-                    id_escalade.getChemin().AddDeplacement(x, y);
-                } else if (!id_escalade.getLabyrinthe().estMur(x, y + 1) && (distance > id_escalade.distance(x, y + 1))) {
-                    y = y + 1;
-                    id_escalade.getChemin().AddDeplacement(x, y);
-                } else if (!id_escalade.getLabyrinthe().estMur(x - 1, y) && (distance > id_escalade.distance(x - 1, y))) {
-                    x = x - 1;
-                    id_escalade.getChemin().AddDeplacement(x, y);
-                } else if (!id_escalade.getLabyrinthe().estMur(x, y - 1) && (distance > id_escalade.distance(x, y - 1))) {
-                    y = y - 1;
-                    id_escalade.getChemin().AddDeplacement(x, y);
-                }
 
-                // Test bloque
-                if (distance == id_escalade.distance(x, y)) {
-                    bloque = true;
-                } else {
-                    // Calcul de la distance
-                    distance = id_escalade.distance(x, y);
-                }
-                //Test solution
-                solution = id_escalade.getLabyrinthe().estArrivee(x, y);
-                if (!solution) {
-                    iteration++;
-                }
+            // Recherche du meilleur voisin
+            if (!id_escalade.getLabyrinthe().estMur(x + 1, y) && (distance > id_escalade.distance(x + 1, y))) { // Test à l'Est
+                x = x + 1;
+                id_escalade.getChemin().AddDeplacement(x, y);
+            } else if (!id_escalade.getLabyrinthe().estMur(x, y + 1) && (distance > id_escalade.distance(x, y + 1))) {
+                y = y + 1;
+                id_escalade.getChemin().AddDeplacement(x, y);
+            } else if (!id_escalade.getLabyrinthe().estMur(x - 1, y) && (distance > id_escalade.distance(x - 1, y))) {
+                x = x - 1;
+                id_escalade.getChemin().AddDeplacement(x, y);
+            } else if (!id_escalade.getLabyrinthe().estMur(x, y - 1) && (distance > id_escalade.distance(x, y - 1))) {
+                y = y - 1;
+                id_escalade.getChemin().AddDeplacement(x, y);
             }
-            if (iteration % 10 == 0) {
-                if (animated) {
-                    animated = false;
-                    sendIteration();
-                    boutonContinuer.setEnabled(true);
-                    getPan().setIndividu_afficher(id_escalade);
-                    getPan().repaint();
-                    if (solution) {
-                        iteration++;
-                    }
-                }
-                System.out.println(" attente " + iteration);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
 
+            // Test bloque
+            if (distance == id_escalade.distance(x, y)) {
+                bloque = true;
+            } else {
+                // Calcul de la distance
+                distance = id_escalade.distance(x, y);
             }
+            //Test solution
+            solution = id_escalade.getLabyrinthe().estArrivee(x, y);
+
+            pause(id_escalade, 10);
         }
 
-        // Affichage du résultat
-        getPan().setIndividu_afficher(id_escalade);
-        getPan().repaint();
+
         System.out.println(" bloqué = " + bloque + " ; solution = " + solution);
-        sendIteration();
-        boutonLancer.setEnabled(true);
-        boutonArreter.setEnabled(false);
-        comboBoxAlpha.setEnabled(true);
-        comboBoxNbI.setEnabled(true);
-        comboBoxTypeResolution.setEnabled(true);
-        ScoreExploration(id_escalade);
     }
 
     /**
@@ -961,7 +1030,7 @@ public class Fenetre extends JFrame {
      */
     public void RechercheAvecTabous() {
         //Initialisation
-        id_tabous = new Individu();
+
         solution = false;
         boolean bloque = false;
         int x = 1;
@@ -973,118 +1042,85 @@ public class Fenetre extends JFrame {
         int distance_Ouest;
         int distance_Nord;
         int distance = 100;
-        iteration = 0;
-        animated = true;
+
 
         // Boucle d'execution de l'algorithme pour chaque individu
 
         // Boucle de résolution
         while ((solution == false) && (bloque == false)) {
-            if (animated) {
-                x_dest = x;
-                y_dest = y;
-                distance = 100;
-                if (!(id_tabous.getLabyrinthe().estMur(x + 1, y)) && !(id_tabous.getChemin().existeDeja(x + 1, y))) {
-                    distance_Est = id_tabous.distance(x + 1, y);
-                    if (distance_Est < distance) {
-                        x_dest = x + 1;
-                        y_dest = y;
-                        distance = distance_Est;
-                    }
-                } else if (!(id_tabous.getLabyrinthe().estMur(x, y + 1)) && !(id_tabous.getChemin().existeDeja(x, y + 1))) {
-                    distance_Sud = id_tabous.distance(x, y + 1);
-                    if (distance_Sud < distance) {
+            x_dest = x;
+            y_dest = y;
+            distance = 100;
+            if (!(id_tabous.getLabyrinthe().estMur(x + 1, y)) && !(id_tabous.getChemin().existeDeja(x + 1, y))) {
+                distance_Est = id_tabous.distance(x + 1, y);
+                if (distance_Est < distance) {
+                    x_dest = x + 1;
+                    y_dest = y;
+                    distance = distance_Est;
+                }
+            } else if (!(id_tabous.getLabyrinthe().estMur(x, y + 1)) && !(id_tabous.getChemin().existeDeja(x, y + 1))) {
+                distance_Sud = id_tabous.distance(x, y + 1);
+                if (distance_Sud < distance) {
+                    x_dest = x;
+                    y_dest = y + 1;
+                    distance = distance_Sud;
+                }
+                if (distance_Sud == distance) {
+                    int a = (int) (round(Math.random(), 0));
+                    if (a == 0) {
                         x_dest = x;
                         y_dest = y + 1;
                         distance = distance_Sud;
                     }
-                    if (distance_Sud == distance) {
-                        int a = (int) (round(Math.random(), 0));
-                        if (a == 0) {
-                            x_dest = x;
-                            y_dest = y + 1;
-                            distance = distance_Sud;
-                        }
-                    }
-                } else if (!(id_tabous.getLabyrinthe().estMur(x - 1, y)) && !(id_tabous.getChemin().existeDeja(x - 1, y))) {
-                    distance_Ouest = id_tabous.distance(x - 1, y);
-                    if (distance_Ouest < distance) {
+                }
+            } else if (!(id_tabous.getLabyrinthe().estMur(x - 1, y)) && !(id_tabous.getChemin().existeDeja(x - 1, y))) {
+                distance_Ouest = id_tabous.distance(x - 1, y);
+                if (distance_Ouest < distance) {
+                    x_dest = x - 1;
+                    y_dest = y;
+                    distance = distance_Ouest;
+                }
+                if (distance_Ouest == distance) {
+                    int a = (int) (round(Math.random(), 0));
+                    if (a == 0) {
                         x_dest = x - 1;
                         y_dest = y;
                         distance = distance_Ouest;
                     }
-                    if (distance_Ouest == distance) {
-                        int a = (int) (round(Math.random(), 0));
-                        if (a == 0) {
-                            x_dest = x - 1;
-                            y_dest = y;
-                            distance = distance_Ouest;
-                        }
-                    }
-                } else if (!(id_tabous.getLabyrinthe().estMur(x, y - 1)) && !(id_tabous.getChemin().existeDeja(x, y - 1))) {
-                    distance_Nord = id_tabous.distance(x, y - 1);
-                    if (distance_Nord < distance) {
+                }
+            } else if (!(id_tabous.getLabyrinthe().estMur(x, y - 1)) && !(id_tabous.getChemin().existeDeja(x, y - 1))) {
+                distance_Nord = id_tabous.distance(x, y - 1);
+                if (distance_Nord < distance) {
+                    x_dest = x;
+                    y_dest = y - 1;
+                    distance = distance_Nord;
+                }
+                if (distance_Nord == distance) {
+                    int a = (int) (round(Math.random(), 0));
+                    if (a == 0) {
                         x_dest = x;
                         y_dest = y - 1;
                         distance = distance_Nord;
                     }
-                    if (distance_Nord == distance) {
-                        int a = (int) (round(Math.random(), 0));
-                        if (a == 0) {
-                            x_dest = x;
-                            y_dest = y - 1;
-                            distance = distance_Nord;
-                        }
-                    }
-                }
-                System.out.println("distance " + distance);
-                // Test bloque si la distance n a pas change
-                if (distance == id_tabous.distance(x, y)) {
-                    bloque = true;
-                }
-                x = x_dest;
-                y = y_dest;
-                id_tabous.getChemin().AddDeplacement(x, y);
-
-                //Test solution
-                solution = id_tabous.getLabyrinthe().estArrivee(x, y);
-                if (!solution) {
-                    iteration++;
                 }
             }
-            if (iteration % 10 == 0) {
-                if (animated) {
-                    animated = false;
-                    sendIteration();
-                    boutonContinuer.setEnabled(true);
-                    getPan().setIndividu_afficher(id_tabous);
-                    getPan().repaint();
-                    if (solution) {
-                        iteration++;
-                    }
-                }
-                System.out.println(" attente " + iteration);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
 
+            // Test bloque si la distance n a pas change
+            if (distance == id_tabous.distance(x, y)) {
+                bloque = true;
             }
+            x = x_dest;
+            y = y_dest;
+            id_tabous.getChemin().AddDeplacement(x, y);
+
+            //Test solution
+            solution = id_tabous.getLabyrinthe().estArrivee(x, y);
+
+            pause(id_tabous, 10);
+
         }
 
-
-        getPan().setIndividu_afficher(id_tabous);
-        repaint();
         System.out.println(" bloque = " + bloque + " ; solution = " + solution);
-        sendIteration();
-        boutonLancer.setEnabled(true);
-        boutonArreter.setEnabled(false);
-        comboBoxAlpha.setEnabled(true);
-        comboBoxNbI.setEnabled(true);
-        comboBoxTypeResolution.setEnabled(true);
-        ScoreExploration(id_tabous);
     }
 
     /**
@@ -1128,8 +1164,8 @@ public class Fenetre extends JFrame {
         Individu_genetique echantillon_genetique_nouveau[] = new Individu_genetique[nbIndividu / 2];
         int proba;
         int proba2;
-        iteration=1;
-        Individu_genetique ind = new Individu_genetique(alpha,2);
+        iteration = 1;
+        Individu_genetique ind = new Individu_genetique(alpha, 2);
         /*******************************************************************
          ************************** BOUCLES DE CALCUL ***********************
          *******************************************************************/
@@ -1283,15 +1319,15 @@ public class Fenetre extends JFrame {
             }
             System.out.println(nb_iteration);
             nb_iteration++;
-            
+
             // 2.4) Vérification des conditions de fin
             if (nb_iteration == max_iterations) {
-                
+
                 passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 passage = true;
             } else {
                 passage = echantillon_genetique.afficher_meilleurIndividu(selection);
-                
+
             }
 //            if(iteration % 101 == 0 && passage==false) {
 //                
@@ -1323,9 +1359,9 @@ public class Fenetre extends JFrame {
 //            else{
 //                iteration++;
 //            }   
-            
+
         } while (passage != true);
-         ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
+        ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
         ind.collision();
         ind.existence();
         int nbcases = ind.getNbcases();
@@ -1347,26 +1383,25 @@ public class Fenetre extends JFrame {
         iteration = 0;
         getPan().init_matrice();
         double add_ph = 0.1;
-        int iteration_max = 200;
-        double coeff=0.0;
-        int x=0;
-        int y=0;
+        int iteration_max = 100;
+        double coeff = 0.0;
+        int x = 0;
+        int y = 0;
         int[] dir;
         int[][] mem;
 
         while (iteration != iteration_max) {
             System.out.println(iteration);
-            
+
             // Mouvement de la colonie
             // Choix de la prochaine direction et Mouvement des individus
             for (int i = 0; i < echantillon_fourmis.getNbIndividu(); i++) {
-                 x = echantillon_fourmis.getIndividu(i).getChemin().get_last_x();
-                 y = echantillon_fourmis.getIndividu(i).getChemin().get_last_y();
-                 dir = fourmisDeplacer(x, y, i);
-                if (dir[0]!=x || dir[1]!=y) {
+                x = echantillon_fourmis.getIndividu(i).getChemin().get_last_x();
+                y = echantillon_fourmis.getIndividu(i).getChemin().get_last_y();
+                dir = fourmisDeplacer(x, y, i);
+                if (dir[0] != x || dir[1] != y) {
                     echantillon_fourmis.getIndividu(i).getChemin().AddDeplacement(dir[0], dir[1]);
-                }
-                else{
+                } else {
                     Individu ind = new Individu();
                     echantillon_fourmis.setInd(ind, i);
                 }
@@ -1375,18 +1410,13 @@ public class Fenetre extends JFrame {
                     for (int k = 0; k < mem.length; k++) {
                         coeff = getPan().get_pheromone(mem[k][0], mem[k][1]);
                         if ((coeff + add_ph) < 1.0) {
-                            getPan().set_pheromone(mem[k][0],mem[k][1], coeff + add_ph);
+                            getPan().set_pheromone(mem[k][0], mem[k][1], coeff + add_ph);
                         }
 
                     }
-                    
+
                     Individu ind = new Individu();
                     echantillon_fourmis.setInd(ind, i);
-//                for (int n = 0; n <= 14; n++) {
-//                    for (int o = 0; o <= 14; o++) {
-//                        System.out.println(getPan().get_pheromone(o, n));
-//                    }
-//                }
                 }
                 for (int n = 0; n <= 14; n++) {
                     for (int o = 0; o <= 14; o++) {
@@ -1396,54 +1426,56 @@ public class Fenetre extends JFrame {
                 getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(i));
                 repaint();
                 try {
-			Thread.sleep(10);
-			} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			}
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
             }
-        iteration++;
-            
+            iteration++;
         }
-//        for (int i = 0; i <= 14; i++) {
-//
-//                for (int j = 0; j <= 14; j++) {
-//                   System.out.println(getPan().get_pheromone(j, i));
-//                }
-//            }
-       Individu ind=new Individu();
-       getPan().setIndividu_afficher(ind);
-       repaint();
-      // getPan().init_matrice();
+
+        // Choix de la meilleure fourmis en cours
+        int position = 0;
+        for (int l = 0; l < nbIndividu; l++) {
+            double score = 0.0;
+            if (doScore(echantillon_fourmis.getIndividu(l)) > score) {
+                score = doScore(echantillon_fourmis.getIndividu(l));
+                position = l;
+            }
+        }
+        // Affichage de la fourmis
+        getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(position));
+        repaint();
     }
 
     public int[] fourmisDeplacer(int x, int y, int i) {
         int[] dir = new int[2];
         int x_dest = x;
         int y_dest = y;
-        int a=0;
+        int a = 0;
         double pheromone = -0.1;
-        
+
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x + 1, y)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x + 1, y))) {
             x_dest = x + 1;
             y_dest = y;
             pheromone = getPan().get_pheromone(x + 1, y);
-            
+
         }
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x, y + 1)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x, y + 1))) {
             if (getPan().get_pheromone(x, y + 1) > pheromone) {
                 x_dest = x;
                 y_dest = y + 1;
                 pheromone = getPan().get_pheromone(x, y + 1);
-                
+
             }
             if (getPan().get_pheromone(x, y + 1) == pheromone) {
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x;
                     y_dest = y + 1;
-                    
+
                 }
             }
         }
@@ -1452,34 +1484,34 @@ public class Fenetre extends JFrame {
                 x_dest = x - 1;
                 y_dest = y;
                 pheromone = getPan().get_pheromone(x - 1, y);
-                
+
             }
             if (getPan().get_pheromone(x - 1, y) == pheromone) {
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x - 1;
                     y_dest = y;
-                    
+
                 }
             }
-        } 
+        }
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x, y - 1)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x, y - 1))) {
             if (getPan().get_pheromone(x, y - 1) > pheromone) {
                 x_dest = x;
                 y_dest = y - 1;
                 pheromone = getPan().get_pheromone(x, y - 1);
-                
+
             }
             if (getPan().get_pheromone(x, y - 1) == pheromone) {
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x;
                     y_dest = y - 1;
-                    
+
                 }
             }
         }
-        
+
         dir[0] = x_dest;
         dir[1] = y_dest;
         return dir;
@@ -1522,19 +1554,13 @@ public class Fenetre extends JFrame {
         //System.out.println(p.formatSol(sol));
 
         //System.out.println(p.affichePremiedecodeSolutions(3));
-        Individu ind_propo = new Individu();
+
+        int[][] dep = new int[0][0];
+        ind_propo.getChemin().setDeplacement(dep);
         for (int i = 0; i < sol1.length; i++) {
             int[] decode = p.decomposeVar(sol1[i]);
             ind_propo.getChemin().AddDeplacement(decode[1], decode[0]);
         }
-        getPan().setIndividu_afficher(ind_propo);
-        repaint();
-        boutonLancer.setEnabled(true);
-        boutonArreter.setEnabled(false);
-        comboBoxAlpha.setEnabled(true);
-        comboBoxNbI.setEnabled(true);
-        comboBoxTypeResolution.setEnabled(true);
-        ScoreExploration(ind_propo);
     }
 
     /**
