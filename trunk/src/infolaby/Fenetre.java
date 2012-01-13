@@ -48,14 +48,8 @@ public class Fenetre extends JFrame {
      * Jlabel : Ecriture de chaîne de caractères sur l'interface
      */
     private JLabel label1 = new JLabel("");
-    private JLabel labelE = new JLabel("0");
-    private JLabel labelI = new JLabel("0");
-    private JLabel labelD = new JLabel("0");
-    private JLabel labelC = new JLabel("0");
-    private JLabel labelM = new JLabel("0");
-    private JLabel labelP = new JLabel("0");
-    private JLabel labelC1 = new JLabel("0.0");
-    private JLabel labelC2 = new JLabel("0.0");
+    private JLabel labelE = new JLabel("");
+
     /**
      * Boolean en cours d'animation ? selon l'etat, met en pause la résolution
      */
@@ -189,7 +183,7 @@ public class Fenetre extends JFrame {
 
 
         // Placement des commandes du haut
-        north.setPreferredSize(new Dimension(400, 160));
+        north.setPreferredSize(new Dimension(500, 160));
         north.setLayout(new GridLayout(3, 3, 5, 5));
         north.add(new JLabel("Alpha"));
         north.add(new JLabel("Nombre d'individus"));
@@ -211,31 +205,17 @@ public class Fenetre extends JFrame {
         north2.add(north, BorderLayout.SOUTH);
 
         //Placement des info du bas
-        south.setPreferredSize(new Dimension(500, 250));
-        south.setLayout(new GridLayout(8, 2, 5, 5));
-        south.add(new JLabel("Numéro Echantillon :"));
+        south.setPreferredSize(new Dimension(500, 345));
+        //south.setLayout(new GridLayout(8, 2, 5, 5));
+        south.add(new JLabel(""));
         south.add(labelE);
-        south.add(new JLabel("Numéro Individu :"));
-        south.add(labelI);
-        south.add(new JLabel("Distance :"));
-        south.add(labelD);
-        south.add(new JLabel("Cases explorées :"));
-        south.add(labelC);
-        south.add(new JLabel("Moyenne temps de résolution réussite échantillon :"));
-        south.add(labelM);
-        south.add(new JLabel("Pourcentage de réussite :"));
-        south.add(labelP);
-        south.add(new JLabel("Critère 1 :"));
-        south.add(labelC1);
-        south.add(new JLabel("Critère 2 :"));
-        south.add(labelC2);
 
         west.setPreferredSize(new Dimension(500, 100));
-        west2.setPreferredSize(new Dimension(100, 100));
+        //west2.setPreferredSize(new Dimension(10, 10));
         west.setLayout(new BorderLayout());
         west.add(north2, BorderLayout.NORTH);
-        west.add(west2, BorderLayout.WEST);
-        west.add(south, BorderLayout.CENTER);
+        //west.add(west2, BorderLayout.WEST);
+        west.add(south, BorderLayout.WEST);
 
         //Placement du labyrinthe au milieu et layout final
         container.setBackground(Color.white);
@@ -446,7 +426,7 @@ public class Fenetre extends JFrame {
             boutonContinuer.setEnabled(false);
             solution = true;
             label1.setText("Vous avez cliqué sur le bouton Arreter");
-
+            t.stop();
         }
     }
 
@@ -601,12 +581,26 @@ public class Fenetre extends JFrame {
         label1.setText("iteration =  " + iteration);
     }
 
+    public void writeScore(String str){
+        labelE.setText(str);
+    }
+    
+    public void ScoreExploration(Individu ind){
+        double score=0.0;
+        int x = ind.getChemin().get_last_x();
+        int y = ind.getChemin().get_last_y();
+        int nbcases=ind.getChemin().getNbcases()-1;
+        score = 100*alpha*(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2))/17)+(1-alpha)*(100.0*nbcases/169);
+        writeScore("<html> Résultats de l'individu <br> Nombre de cases explorées : "+nbcases+"<br> Distance : "+(Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2)))+"<br> Score : "+score+"</html>");
+    }
+    
+    
     /**
      * Resolution BFS
      */
     public void BFS() {
         id_BFS = new Individu();
-
+        iteration=1;
         //Matrice permettant de mémoriser les positions
         int[][] mem_positionX = new int[40][40];
         int[][] mem_positionY = new int[40][40];
@@ -618,8 +612,8 @@ public class Fenetre extends JFrame {
         solution = false; // boolean permettant d'arreter le programme quand l'individu est arrivé
 
         ///Position de l'individu dans le labyrinthe en pixels
-        int x = id_DFS.getChemin().getDeplacement()[0][0]; //Abscisse
-        int y = id_DFS.getChemin().getDeplacement()[0][1]; //Ordonnée
+        int x = id_BFS.getChemin().getDeplacement()[0][0]; //Abscisse
+        int y = id_BFS.getChemin().getDeplacement()[0][1]; //Ordonnée
 
 
         //Matrice de boolean pour vérifier si une position dans le labyrinthe a déjà été mémorisée
@@ -699,6 +693,32 @@ public class Fenetre extends JFrame {
 
                 }
             }
+            if(iteration % 10 == 0) {
+                
+                    animated = false;
+                    sendIteration();
+                    boutonContinuer.setEnabled(true);
+                    getPan().setIndividu_afficher(id_BFS);
+                    getPan().repaint();
+                    if (solution) {
+                        iteration++;
+                    }
+                while(!animated){
+                System.out.println(" attente " + iteration);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                }
+                iteration++;
+            }
+            else{
+                iteration++;
+            }
+            
         }
         for (i = 0; i < id_BFS.getChemin().getNbcases(); i++) {
             System.out.println(id_BFS.getChemin().getDeplacement()[i][0] + " " + id_BFS.getChemin().getDeplacement()[i][1]);
@@ -709,6 +729,7 @@ public class Fenetre extends JFrame {
         comboBoxAlpha.setEnabled(true);
         comboBoxNbI.setEnabled(true);
         comboBoxTypeResolution.setEnabled(true);
+        ScoreExploration(id_BFS);
     }
 
     /**
@@ -835,7 +856,7 @@ public class Fenetre extends JFrame {
         comboBoxAlpha.setEnabled(true);
         comboBoxNbI.setEnabled(true);
         comboBoxTypeResolution.setEnabled(true);
-
+        ScoreExploration(id_DFS);
     }
 
     /**
@@ -929,6 +950,7 @@ public class Fenetre extends JFrame {
         comboBoxAlpha.setEnabled(true);
         comboBoxNbI.setEnabled(true);
         comboBoxTypeResolution.setEnabled(true);
+        ScoreExploration(id_escalade);
     }
 
     /**
@@ -937,7 +959,7 @@ public class Fenetre extends JFrame {
     public void RechercheAvecTabous() {
         //Initialisation
         id_tabous = new Individu();
-        boolean solution = false;
+        solution = false;
         boolean bloque = false;
         int x = 1;
         int y = 1;
@@ -1053,6 +1075,13 @@ public class Fenetre extends JFrame {
         getPan().setIndividu_afficher(id_tabous);
         repaint();
         System.out.println(" bloque = " + bloque + " ; solution = " + solution);
+        sendIteration();
+        boutonLancer.setEnabled(true);
+        boutonArreter.setEnabled(false);
+        comboBoxAlpha.setEnabled(true);
+        comboBoxNbI.setEnabled(true);
+        comboBoxTypeResolution.setEnabled(true);
+        ScoreExploration(id_tabous);
     }
 
     /**
@@ -1096,7 +1125,7 @@ public class Fenetre extends JFrame {
         Individu_genetique echantillon_genetique_nouveau[] = new Individu_genetique[nbIndividu / 2];
         int proba;
         int proba2;
-
+        iteration=1;
         /*******************************************************************
          ************************** BOUCLES DE CALCUL ***********************
          *******************************************************************/
@@ -1249,17 +1278,46 @@ public class Fenetre extends JFrame {
                 echantillon_genetique.setIndividu(i, echantillon_genetique_nouveau[i]);
             }
             nb_iteration++;
-            System.out.println("iteration : " + nb_iteration);
 
             // 2.4) Vérification des conditions de fin
             if (nb_iteration == max_iterations) {
-                System.out.println("it max");
+                
                 passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 passage = true;
             } else {
-                passage = echantillon_genetique.afficher_meilleurIndividu(selection);
+                //passage = echantillon_genetique.afficher_meilleurIndividu(selection);
             }
-
+            if(iteration % 101 == 0 && passage==false) {
+                
+                    animated = false;
+                    sendIteration();
+                    boutonContinuer.setEnabled(true);
+                    Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
+                    ind.collision();
+                    ind.existence();
+                    int nbcases = ind.getNbcases();
+                    ind.getChemin().couper(nbcases);
+                    getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
+                    repaint();
+                    if (solution) {
+                        iteration++;
+                    }
+                while(!animated){
+                System.out.println(" attente " + iteration);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                }
+                iteration++;
+            }
+            else{
+                iteration++;
+            }   
+            
         } while (passage != true);
         Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
         ind.collision();
@@ -1268,13 +1326,18 @@ public class Fenetre extends JFrame {
         ind.getChemin().couper(nbcases);
         getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
         repaint();
+        boutonLancer.setEnabled(true);
+        boutonArreter.setEnabled(false);
+        comboBoxAlpha.setEnabled(true);
+        comboBoxNbI.setEnabled(true);
+        comboBoxTypeResolution.setEnabled(true);
     }
 
     /**
      * Resolution colonie de fourmis
      */
     public void AlgorithmeColonieFourmis() {
-        echantillon_fourmis = new Echantillon(5);
+        echantillon_fourmis = new Echantillon(nbIndividu);
         iteration = 0;
         getPan().init_matrice();
         double add_ph = 0.1;
@@ -1305,7 +1368,6 @@ public class Fenetre extends JFrame {
                     mem = echantillon_fourmis.getIndividu(i).getChemin().getDeplacement();
                     for (int k = 0; k < mem.length; k++) {
                         coeff = getPan().get_pheromone(mem[k][0], mem[k][1]);
-                        System.out.println(mem[k][0]+" , "+mem[k][1]);
                         if ((coeff + add_ph) < 1.0) {
                             getPan().set_pheromone(mem[k][0],mem[k][1], coeff + add_ph);
                         }
@@ -1314,11 +1376,11 @@ public class Fenetre extends JFrame {
                     
                     Individu ind = new Individu();
                     echantillon_fourmis.setInd(ind, i);
-                for (int n = 0; n <= 14; n++) {
-                    for (int o = 0; o <= 14; o++) {
-                        System.out.println(getPan().get_pheromone(o, n));
-                    }
-                }
+//                for (int n = 0; n <= 14; n++) {
+//                    for (int o = 0; o <= 14; o++) {
+//                        System.out.println(getPan().get_pheromone(o, n));
+//                    }
+//                }
                 }
                 for (int n = 0; n <= 14; n++) {
                     for (int o = 0; o <= 14; o++) {
@@ -1356,7 +1418,7 @@ public class Fenetre extends JFrame {
         int y_dest = y;
         int a=0;
         double pheromone = -0.1;
-        ;
+        
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x + 1, y)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x + 1, y))) {
             x_dest = x + 1;
             y_dest = y;
@@ -1461,6 +1523,12 @@ public class Fenetre extends JFrame {
         }
         getPan().setIndividu_afficher(ind_propo);
         repaint();
+        boutonLancer.setEnabled(true);
+        boutonArreter.setEnabled(false);
+        comboBoxAlpha.setEnabled(true);
+        comboBoxNbI.setEnabled(true);
+        comboBoxTypeResolution.setEnabled(true);
+        ScoreExploration(ind_propo);
     }
 
     /**
