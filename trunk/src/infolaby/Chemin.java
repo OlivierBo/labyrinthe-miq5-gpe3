@@ -5,7 +5,7 @@ package infolaby;
  * Classe definissant les déplacements de l'individu
  * @author Olivier
  */
-public class Chemin {
+public class Chemin implements Cloneable {
          /**
          * Deplacement par coordonnres 1er element : ligne ; 2nd element : colonne
          */
@@ -27,6 +27,16 @@ public class Chemin {
 		deplacement[0][1]=1;
 		this.updateNbcase();	
 	}
+        
+        public Object clone(){
+            Chemin chemin_to_return = null;
+            try{
+                chemin_to_return = (Chemin) super.clone();
+            }catch(CloneNotSupportedException e){}
+        
+            chemin_to_return.deplacement = deplacement.clone();
+            return chemin_to_return;
+        }
 	
          /**
          * Mise a jour du nombre de cases explorees
@@ -64,7 +74,7 @@ public class Chemin {
          * @return Nombre de cases
          */
 	public int getNbcases(){
-		return nbcases;
+                return nbcases;
 	}
 
 	
@@ -112,14 +122,14 @@ public class Chemin {
          * @param longueur 
          *      Longueur a couper
          */
-        public void couper(int longueur){
-            int nouveau[][] = new int [longueur][2];
-            for (int i=0;i<longueur;i++){
+        public void couper(int longueur_chemin){
+            int nouveau[][] = new int [longueur_chemin][2];
+            for (int i=0;i<longueur_chemin;i++){
                 nouveau[i][0]=deplacement[i][0];
                 nouveau[i][1]=deplacement[i][1];
             }
             deplacement=nouveau;
-            this.updateNbcase();
+            this.nbcases = longueur_chemin;
  
         }
 
