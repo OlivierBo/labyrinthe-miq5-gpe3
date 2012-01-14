@@ -182,24 +182,6 @@ public void casesPossible() {
         return "V[" + decode[1] + "," + decode[0] + "," + decode[2] + "]";
     }
     
-    
-   
-    /*
-    @Override
-    public String formatSol(int[] sol) {
-    StringBuilder decode = new StringBuilder(this.nbrCol * this.nbrLig);
-    for (int i = 0; i < this.nbrCol; i++) {
-    for (int j = 0; j < this.nbrLig; j++) {
-    if (sol[this.numVar(i, j) - 1] < 0) {
-    decode.append('.');
-    } else {
-    decode.append('*');
-    }
-    }
-    decode.append('\n');
-    }
-    return decode.toString();*/
-    /* MAIN pour lancer le fichier */
 
     public static LabyrintheProposition laby1() {
 //        int[] mursX = new int[1];
@@ -235,32 +217,19 @@ public void casesPossible() {
     }
     
         public static LabyrintheProposition laby4() {
-//        int[] mursX = new int[1];
-//        int[] mursY = new int[1];
-        int[] mursX = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,12,12,12,12,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14};
-        int[] mursY = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,0,14,0,2,3,4,6,7,8,9,10,11,12,14,0,6,10,14,0,2,4,6,8,10,12,13,14,0,2,4,8,10,14,0,2,4,5,6,8,10,11,12,13,14,0,6,8,12,14,0,1,2,3,4,6,7,8,9,10,12,14,0,6,12,14,0,2,3,4,5,6,8,10,11,12,14,0,2,8,10,14,0,2,4,5,6,8,10,12,14,0,8,12,14,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-//        mursX[0] = 0;
-//        mursY[0] = 1;
+//        int[] mursX = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,12,12,12,12,13,13,13,13,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14};
+//        int[] mursY = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,0,14,0,2,3,4,6,7,8,9,10,11,12,14,0,6,10,14,0,2,4,6,8,10,12,13,14,0,2,4,8,10,14,0,2,4,5,6,8,10,11,12,13,14,0,6,8,12,14,0,1,2,3,4,6,7,8,9,10,12,14,0,6,12,14,0,2,3,4,5,6,8,10,11,12,14,0,2,8,10,14,0,2,4,5,6,8,10,12,14,0,8,12,14,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+          Labyrinthe labyrinthe=new Labyrinthe();
+          labyrinthe.doListMurs();
+          int[][] list = labyrinthe.getListeMurs();
+          int[] mursX = new int[list.length];
+          int[] mursY = new int[list.length];
+          
+          for(int i=0; i<list.length;i++){
+              mursX[i]=list[i][0];
+              mursY[i]=list[i][1];
+          }
         LabyrintheProposition lab = new LabyrintheProposition(40, 15, 15, mursX, mursY, 1, 1, 13, 13);
         return lab;
     }
-//    public static void main(String[] args) {
-//        Labyrinthe p = Labyrinthe.laby2();
-//        //System.out.println(p);
-//        System.out.println(p.formatClauses());
-//        int[] sol = p.premiereSol();
-//
-////        for(int i=0;i<sol.length;i++){
-////            if(sol[i]>0){
-////                int[] sol1=sol[i];
-////            }
-////        }
-////        for (int i = 0; i < sol.length; i++) {
-////            System.out.println(sol[i]);
-////        }
-//        System.out.println(p.formatSol(sol));
-//
-//        //System.out.println(p.affichePremiedecodeSolutions(3));
-//    }
-   
 }
