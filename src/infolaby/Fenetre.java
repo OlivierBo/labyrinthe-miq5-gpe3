@@ -118,7 +118,7 @@ public class Fenetre extends JFrame {
     /**
      * Pondération de la fonction score
      */
-    private double alpha = 1.0;
+    private double alpha = 0.6;
     /**
      * Variables de sorties d'algorithme pour comparaison
      */
@@ -152,6 +152,7 @@ public class Fenetre extends JFrame {
         String[] listeResol = {"DFS", "BFS", "Algorithme greedy", "Algorithme A*", "Escalade", "Recherche avec tabous", "Recuit simulé", "Algorithme génétiques", "Algorithme de colonies de fourmis", "Logique de propositions", "Logique de prédicats"};
 
         comboBoxAlpha = new JComboBox<>(listeA);
+        comboBoxAlpha.setSelectedIndex(6);
         comboBoxNbI = new JComboBox<>(listeI);
         comboBoxTypeResolution = new JComboBox<>(listeResol);
 
@@ -619,14 +620,14 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
-            iteration=1;
+            iteration=0;
             tempspausefin = 0;
             long deb = Runtime.getRuntime().freeMemory();
             long debT = System.currentTimeMillis();
             AlgorithmeGenetique();
             memoire = deb - Runtime.getRuntime().freeMemory();
             temps = System.currentTimeMillis() - debT - tempspausefin;
-            individu_meilleur_genetique = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(2);
+            individu_meilleur_genetique = echantillon_genetique.afficher_meilleurIndividu();
             individu_meilleur_genetique.collision();
             individu_meilleur_genetique.existence();
             int nbcases = individu_meilleur_genetique.getNbcases();
@@ -699,6 +700,7 @@ public class Fenetre extends JFrame {
             comboBoxAlpha.setEnabled(true);
             comboBoxNbI.setEnabled(true);
             comboBoxTypeResolution.setEnabled(true);
+            solution=true;
             ScoreExploration(ind_propo);
         }
     }
@@ -747,7 +749,7 @@ public class Fenetre extends JFrame {
         int x = ind.getChemin().get_last_x();
         int y = ind.getChemin().get_last_y();
         int nbcases = ind.getChemin().getNbcases();
-        score = 100 - 100 * alpha * (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2)) / 17) - (1 - alpha) * (100.0 * (169 - nbcases) / 169);
+        score = alpha*(18.38-Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2)))+(1-alpha)*(nbcases);
         writeScore("<html> Résultats de l'individu <br> solution : " + solution + "<br> Nombre de cases explorées : " + nbcases + "<br> Distance : " + (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2))) + "<br> Score : " + score + "<br> Memoire : " + (double) ((double) (memoire) / (1048576.0)) + "<br> Temps : " + (double) (temps) / 1000.0 + "</html>");
     }
 
@@ -756,7 +758,7 @@ public class Fenetre extends JFrame {
         int x = ind.getChemin().get_last_x();
         int y = ind.getChemin().get_last_y();
         int nbcases = ind.getChemin().getNbcases();
-        score = 100 - 100 * alpha * (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2)) / 17) - (1 - alpha) * (100.0 * (169 - nbcases) / 169);
+        score =  alpha*(18.38-Math.sqrt(Math.pow(13-x,2)+Math.pow(13-y,2)))+(1-alpha)*(nbcases);
         return score;
     }
 
@@ -1178,66 +1180,64 @@ public class Fenetre extends JFrame {
      * Resolution genetique
      */
     public void AlgorithmeGenetique() {
-
         /*******************************************************************
          *********************** DEFINITION DES VARIABLES *******************
          *******************************************************************/
-        /******** Paramètres ******** 
+        
+        /******** Paramètres fenêtre ******** 
         - Nombre individu - divisible par 4 (nbIndividu)
-        - Pondération de la fonction de score (alpha)
+        - Pondération de la fonction de score (alpha) : 0 = priorité sur nb-cases | 1 = priorité sur la distance
+         ********* Algorithme ********
         - Méthode de sélection (selection)
         - Probabilité de mutation (prob_mutation)
         - Nombre max d'itérations (max_iterations)
-         ********* Algorithme ********
-        - Nombre d'itérations déjà effectuées (nb_iterations)
+        - Nombre d'itérations déjà effectuées (nb_iteration)
         - Fin de l'algorithme (passage)
         - Nombre d'individus virtuels dans le cas de la probabilité proportionnelle = selection 2 (etendue)
         - Individu_genetique temporaire pour le tri à bulle ou des changements de place (individu_temp)
-        - Tableau d'individus_génétiques = nouvel echantillon_genetique pour la sélection, combinaison (echantillon_genetique_nouveau)
         - Entier pour les probabilités (proba,proba2)
          */
-        //double alpha = 1; // 0 : nb-cases | 1 : distance
-        int selection = 2;
-        double prob_mutation = 0.01;
-        int max_iterations = 300;
+        
+        int selection = 1;
+        double prob_mutation = 0.2;
+        int max_iterations = 200;
 
         int nb_iteration = 0;
         boolean passage = false;
         int etendue;
         Individu_genetique individu_temp;
-        Individu_genetique echantillon_genetique_nouveau[] = new Individu_genetique[nbIndividu / 2];
         int proba;
         int proba2;
-        
         
         /*******************************************************************
          ************************** BOUCLES DE CALCUL ***********************
          *******************************************************************/
+        
         // 1) Initialisation : on engendre aléatoirement une population Po comprenant N individus
-        echantillon_genetique = new Echantillon_genetique(nbIndividu, alpha, selection);
+        echantillon_genetique = new Echantillon_genetique(nbIndividu, alpha);
+        
         // 2) Boucles d'itérations et traitement des données jusqu'à convergence ou arrêt
         do {
+            
             // 2.1) Sélection : on sélectionne un sous-ensemble de la population de taille p tel que p = N/2
             switch (selection) {
 
                 case 1: // Rang = tri sur la moitié de la pop (on ne retient que la moitié supérieur)
-                    for (int i = 0; i < nbIndividu / 2; i++) {
-                        individu_temp = echantillon_genetique.getIndividu(i);
-                        for (int j = i + 1; j < nbIndividu; j++) {
+                    for (int i=0;i<nbIndividu/2;i++) {
+                        for (int j=i+1;j<nbIndividu;j++) {
                             if (echantillon_genetique.getIndividu(j).score > echantillon_genetique.getIndividu(i).score) {
                                 individu_temp = echantillon_genetique.getIndividu(j);
                                 echantillon_genetique.setIndividu(j, echantillon_genetique.getIndividu(i));
                                 echantillon_genetique.setIndividu(i, individu_temp);
                             }
                         }
-                        echantillon_genetique_nouveau[i] = individu_temp;
                     }
                     break;
 
                 case 2: // Tournoi = tri sur la pop. + proba pondérée + meilleur des deux         
                     // Tri par odre de score
-                    for (int i = 0; i < nbIndividu; i++) {
-                        for (int j = i + 1; j < nbIndividu; j++) {
+                    for (int i=0;i<nbIndividu;i++) {
+                        for (int j=i+1;j<nbIndividu;j++) {
                             if (echantillon_genetique.getIndividu(j).score > echantillon_genetique.getIndividu(i).score) {
                                 individu_temp = echantillon_genetique.getIndividu(j);
                                 echantillon_genetique.setIndividu(j, echantillon_genetique.getIndividu(i));
@@ -1247,12 +1247,13 @@ public class Fenetre extends JFrame {
                     }
 
                     // Sélection (meilleur des deux probas pondérées)
-                    for (int i = 0; i < nbIndividu / 2; i++) {
-                        int candidats = nbIndividu - i;
-                        etendue = ((candidats) * (candidats + 1)) / 2;
-                        proba = (int) Math.ceil(Math.random() * etendue);
-                        proba2 = (int) Math.ceil(Math.random() * etendue);
+                    for (int i=0;i<nbIndividu/2;i++) {
+                        int candidats = nbIndividu-i;
+                        etendue = ((candidats)*(candidats+1))/2;
+                        proba = i+(int)(Math.random()*etendue);
+                        proba2 = i+(int)(Math.random()*etendue);
 
+                        // On retient le meilleur individu
                         if (proba2 < proba) {
                             proba = proba2;
                         }
@@ -1260,125 +1261,101 @@ public class Fenetre extends JFrame {
                         int cellule = 0;
                         double total = 0;
 
+                        // Recherde de l'individu concerné
                         do {
                             total = total + (candidats - cellule);
                             cellule++;
                         } while (total < proba);
-
-                        individu_temp = echantillon_genetique.getIndividu(cellule - 1);
-                        echantillon_genetique_nouveau[i] = individu_temp;
-
+                        
                         // Décalage pour ne pas reprendre deux fois le même
-                        for (int j = cellule - 1; j < candidats - 1; j++) {
-                            echantillon_genetique.setIndividu(j, echantillon_genetique.getIndividu(j + 1));
+                        individu_temp = echantillon_genetique.getIndividu(cellule-1);
+                        for (int j=cellule-1;j>i;j--) {
+                            echantillon_genetique.setIndividu(j,echantillon_genetique.getIndividu(j-1));
                         }
-
-                        echantillon_genetique.setIndividu(candidats - 1, individu_temp);
+                        // Enregistrement de l'individu à la position en cours (dans la première moitié)
+                        echantillon_genetique.setIndividu(i,individu_temp);
                     }
                     break;
-
-                case 3: // Probabilité        
-                    for (int i = 0; i < nbIndividu / 2; i++) {
-                        int cellule = (int) (Math.random() * (nbIndividu - i));
-                        echantillon_genetique_nouveau[i] = echantillon_genetique.getIndividu(cellule);
-                        // décalage pour ne pas reprendre deux fois le même
-                        if (cellule != nbIndividu - i - 1) {
-                            individu_temp = echantillon_genetique.getIndividu(cellule);
-                            echantillon_genetique.setIndividu(cellule, echantillon_genetique.getIndividu(nbIndividu - i - 1));
-                            echantillon_genetique.setIndividu(nbIndividu - i - 1, individu_temp);
-                        }
-                    }
-                    break;
-
             }
-
-            /* 2.2) Croisement : parmi ces p individus, on constitue p/2 couples qui seront alors croisés au point de collision le plus petit
+            
+            /* 2.2) Croisement : parmi ces p individus, on constitue p/2 couples qui seront alors croisés en un point du parcours déjà fait
              *  Individu : 
              *  - - - -( - - - - - -)
              *  | |      |
              *  0 1      croisement
              */
-            for (int i = nbIndividu / 2; i < nbIndividu; i += 2) {
+            for (int i=nbIndividu/2;i<nbIndividu;i+=2) {
 
-                proba = (int) (Math.random() * (nbIndividu - i));
-                proba2 = (int) (Math.random() * (nbIndividu - i));
-
-                while (proba == proba2) {
-                    proba2 = (int) (Math.random() * (nbIndividu - i));
-                }
-
-                // Repérage des deux individus parents
-                Individu_genetique individu1 = echantillon_genetique_nouveau[proba];
-                Individu_genetique individu2 = echantillon_genetique_nouveau[proba2];
+                // Sélection des deux individus parents
+                Individu_genetique individu1 = (Individu_genetique) echantillon_genetique.getIndividu((i-(nbIndividu/2))/2).clone();
+                Individu_genetique individu2 = (Individu_genetique) echantillon_genetique.getIndividu(nbIndividu/4+(i-(nbIndividu/2))/2).clone();
+                
+                // Définition du point de croisement : position maximale sans retour sur soi ni butée sur un mur parmi les deux parents
                 int croisement = Math.max(individu1.nb_cases, individu2.nb_cases);
+                // Autre possibilité : int croisement = (int) (Math.random()*Math.max(individu1.nb_cases, individu2.nb_cases))+1;             
 
-                // décalage pour ne pas reprendre deux fois le même
-                if (proba != nbIndividu - i - 1) {
-                    individu_temp = echantillon_genetique_nouveau[proba];
-                    echantillon_genetique_nouveau[proba] = echantillon_genetique_nouveau[nbIndividu - i - 1];
-                    echantillon_genetique_nouveau[nbIndividu - i - 1] = individu_temp;
-                }
-                if (proba2 != nbIndividu - i - 2) {
-                    individu_temp = echantillon_genetique_nouveau[proba2];
-                    echantillon_genetique_nouveau[proba2] = echantillon_genetique_nouveau[nbIndividu - i - 2];
-                    echantillon_genetique_nouveau[nbIndividu - i - 2] = individu_temp;
-                }
-
-                // Création des enfants 
                 // Croisement des directions
-                for (int j = (croisement - 1); j < individu1.longueur; j++) {
+                for (int j=croisement-1;j<individu1.longueur;j++) {
                     int temp = individu1.individu[j];
                     individu1.individu[j] = individu2.individu[j];
                     individu2.individu[j] = temp;
-                }
-                // 2.3) Mutation //(int)(Math.random()*(individu1.longueur-croisement))+croisement
-                if (new Random().nextInt((int) (1 / prob_mutation)) == 0) {
-                    individu1.individu[croisement - 1] = (int) (Math.random() * 4);
-                }
-                if (new Random().nextInt((int) (1 / prob_mutation)) == 0) {
-                    individu2.individu[croisement - 1] = (int) (Math.random() * 4);
-                }
+                }           
 
+                // 2.3) Mutation des enfants sur la partie du chemin valide
+                if ((float)(Math.random())<prob_mutation) {
+                    individu1.individu[(int)(Math.random()*(croisement))] = (int)(Math.random()*4);
+                }
+                if ((float)(Math.random())<prob_mutation) {
+                    individu2.individu[(int)(Math.random()*(croisement))] = (int)(Math.random()*4);
+                }
+                
                 // Traduction des nouveaux enfants en termes de coordonnées + evaluation
                 individu1.chemin.couper(croisement);
                 individu2.chemin.couper(croisement);
-                individu1.traduction_combinaison(croisement - 1);
-                individu2.traduction_combinaison(croisement - 1);
+                individu1.traduction_combinaison(croisement-1);
+                individu2.traduction_combinaison(croisement-1);
                 individu1.collision();
                 individu2.collision();
                 individu1.existence();
                 individu2.existence();
-                if (selection != 3) {
-                    individu1.fonction_score();
-                    individu2.fonction_score();
-                }
+                individu1.fonction_score();
+                individu2.fonction_score();
 
-                // Enregistrement de la nouvelle population
-                echantillon_genetique.setIndividu(i, individu1);
-                echantillon_genetique.setIndividu(i + 1, individu2);
+                // Enregistrement des enfants (deuxième moitié de la population)
+                echantillon_genetique.setIndividu(i,individu1);
+                echantillon_genetique.setIndividu(i+1,individu2);
             }
-            // Complément de la population avec les parents
-            for (int i = 0; i < nbIndividu / 2; i++) {
-                echantillon_genetique.setIndividu(i, echantillon_genetique_nouveau[i]);
-            }
-            System.out.println(nb_iteration);
-            nb_iteration++;
             
+            // Informations
+            individu_temp = (Individu_genetique) echantillon_genetique.afficher_meilleurIndividu().clone();
+            System.out.println("\n******* Meilleur individu de la population *******");
+            System.out.println("- Score : "+individu_temp.score);
+            System.out.println("- Nombre bonnes cases : "+individu_temp.nb_cases);
+            System.out.println("itération : "+nb_iteration);
+            nb_iteration++;
             sendIteration();
             iteration++;
-
-            // 2.4) Vérification des conditions de fin
+            
+            // Affichage du meilleur individu sur le labyrinthe
+            Chemin meilleur_chemin = individu_temp.chemin;
+            meilleur_chemin.couper(individu_temp.nb_cases);
+            getPan().getIndividu_afficher().getChemin().setDeplacement(meilleur_chemin.getDeplacement());
+            repaint();
+            
+            // Vérification des conditions de fin
             if (nb_iteration == max_iterations) {
-
-                passage = echantillon_genetique.afficher_meilleurIndividu(selection);
                 passage = true;
-            } else {
-                passage = echantillon_genetique.afficher_meilleurIndividu(selection);
-
-            }
-        } while (passage != true);
-        
+            }else{
+                if(individu_temp.solution){
+                    passage = true;
+                    System.out.println("Solution trouvée !!!");
+                }
+            }    
+            
+        } while (passage != true);       
     }
+        
+    
 
     /**
      * Resolution colonie de fourmis
