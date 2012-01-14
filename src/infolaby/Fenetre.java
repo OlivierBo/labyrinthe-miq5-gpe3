@@ -1361,54 +1361,58 @@ public class Fenetre extends JFrame {
      * Resolution colonie de fourmis
      */
     public void AlgorithmeColonieFourmis() {
-        echantillon_fourmis = new Echantillon(nbIndividu);
-        iteration = 1;
-        getPan().init_matrice();
-        double add_ph = 0.1;
-        int iteration_max = 100;
-        double coeff = 0.0;
-        double coeffDecroissance=0.9995;
+        echantillon_fourmis = new Echantillon(nbIndividu);      //initialisation du nombre d'individus
+        iteration = 0;
+        getPan().init_matrice();       //initialisation de la matrice de pheromones
+        double add_ph = 0.2;
+        int iteration_max = 100;       // nb d'itérations maxi
+        double coeff = 0.0;            
+        double evap = 0.99;            // initialisation du coefficient d'evaporation
         int x = 0;
         int y = 0;
         int[] dir;
         int[][] mem;
 
-        while (iteration != iteration_max) {
+        while (iteration != iteration_max) {        // on fait tourner l'algorithme tant que le nb d'itération max n'est pas atteinte
             System.out.println(iteration);
 
-            // Mouvement de la colonie
-            // Choix de la prochaine direction et Mouvement des individus
-            for (int i = 0; i < echantillon_fourmis.getNbIndividu(); i++) {
-                x = echantillon_fourmis.getIndividu(i).getChemin().get_last_x();
-                y = echantillon_fourmis.getIndividu(i).getChemin().get_last_y();
+            // Mouvement de la colonie et choix de la prochaine direction
+            for (int i = 0; i < echantillon_fourmis.getNbIndividu(); i++) {        // l'algorithme tourne pour chaque fourmi
+                x = echantillon_fourmis.getIndividu(i).getChemin().get_last_x();   // recuperation de la coordonnée x de la fourmi i 
+                y = echantillon_fourmis.getIndividu(i).getChemin().get_last_y();   // recuperation de la coordonnée y de la fourmi i
                 dir = fourmisDeplacer(x, y, i);
-                if (dir[0] != x || dir[1] != y) {
-                    echantillon_fourmis.getIndividu(i).getChemin().AddDeplacement(dir[0], dir[1]);
+                if (dir[0] != x || dir[1] != y) {                                 // On teste si l'individu n'est pas dans un cul_de_sac
+                                                                                  // (cul de sac si l'individu n'a pas bougé à la dernière itération)
+                    
+                    echantillon_fourmis.getIndividu(i).getChemin().AddDeplacement(dir[0], dir[1]); // si l'individu n'est pas dans un endroit considéré 
+                                                                                                   // comme un cul-de-sac, on procède à son déplacement
                 } else {
-                    Individu ind = new Individu();
+                    Individu ind = new Individu();                      // On réinitialise l'individu à la case départ si
+                                                                        // il se retrouve dans un cul de sac
                     echantillon_fourmis.setInd(ind, i);
                 }
-                if (echantillon_fourmis.getIndividu(i).getLabyrinthe().estArrivee(dir[0], dir[1])) {
+                if (echantillon_fourmis.getIndividu(i).getLabyrinthe().estArrivee(dir[0], dir[1])) {  // si l'individu a trouvé la solution, on stocke le chemin qu'il a
+                                                                                                      // parcouru et on le reinitialise à la case départ                              
                     mem = echantillon_fourmis.getIndividu(i).getChemin().getDeplacement();
-                    for (int k = 0; k < mem.length; k++) {
-                        coeff = getPan().get_pheromone(mem[k][0], mem[k][1]);
+                    for (int k = 0; k < mem.length; k++) {                                      // On remplit la matrice de phéromone avec le chemin en mémoire
+                        coeff = getPan().get_pheromone(mem[k][0], mem[k][1]);                   
                         if ((coeff + add_ph) < 1.0) {
                             getPan().set_pheromone(mem[k][0], mem[k][1], coeff + add_ph);
                         }
 
                     }
 
-                    Individu ind = new Individu();
+                    Individu ind = new Individu();  //réinitialisation de l'individu à la case départ
                     echantillon_fourmis.setInd(ind, i);
                 }
-                for (int n = 0; n <= 14; n++) {
+                for (int n = 0; n <= 14; n++) {             
                     for (int o = 0; o <= 14; o++) {
-                        getPan().set_pheromone(n, o, getPan().get_pheromone(n, o) * coeffDecroissance);
+                        getPan().set_pheromone(n, o, getPan().get_pheromone(n, o) * evap);  // Evaporation de la matrice de phéromone suivant le coefficient d'évaporation "evap"
                     }
                 }
                 getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(i));
                 repaint();
-                
+                // Attente pour la visualisation
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
@@ -1421,30 +1425,62 @@ public class Fenetre extends JFrame {
             iteration++;
         }
 
-
+        // Choix de la meilleure fourmis en cours
+        int position = 0;
+        for (int l = 0; l < nbIndividu; l++) {
+            double score = 0.0;
+            if (doScore(echantillon_fourmis.getIndividu(l)) > score) {
+                score = doScore(echantillon_fourmis.getIndividu(l));
+                position = l;
+            }
+        }
+        // Affichage de la fourmis
+        getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(position));
+        repaint();
     }
 
-    public int[] fourmisDeplacer(int x, int y, int i) {
+    public int[] fourmisDeplacer(int x, int y, int i) {  //méthode permettant de faire le choix de la case de destination suivante
         int[] dir = new int[2];
         int x_dest = x;
         int y_dest = y;
         int a = 0;
-        double pheromone = -0.1;
+        double pheromone = -1.0;
 
-        if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x + 1, y)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x + 1, y))) {
-            x_dest = x + 1;
-            y_dest = y;
-            pheromone = getPan().get_pheromone(x + 1, y);
+        if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x + 1, y)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x + 1, y))) { 
+            // On teste la case à droite de la position actuelle pour savoir si c'est un mur et si l'individu y est deja passé
+            // si le test est négatif, on regarde le niveau de phéromone en présence
+            
+            //x_dest = x + 1;
+            //y_dest = y;  
+            //pheromone = getPan().get_pheromone(x + 1, y); 
+        if (getPan().get_pheromone(x+1, y) > pheromone) {
+                x_dest = x+1;
+                y_dest = y;  //si le niveau de pheromone est supérieur à celui de la case actuelle, 
+                             //on stocke ses coordonnées comme destination suivante
+                pheromone = getPan().get_pheromone(x+1,y); // on utilise le niveau de phéromone de destination comme nouvelle référence
+        }
+            if (getPan().get_pheromone(x+1, y) == pheromone) { // si le niveau de phéromone est égal a celui de la position actuelle, on a 
+                                                                 // une chance sur deux de choisir la case supérieure comme destination suivante
+                a = (int) (round(Math.random(), 0));
+                if (a == 0) {
+                    x_dest = x+1;
+                    y_dest = y;
 
+                }
+            }    
         }
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x, y + 1)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x, y + 1))) {
+            // On teste la case supérieure à la position actuelle pour savoir si c'est un mur et si l'individu y est deja passé
+            // si le test est négatif, on regarde le niveau de phéromone en présence
             if (getPan().get_pheromone(x, y + 1) > pheromone) {
                 x_dest = x;
-                y_dest = y + 1;
-                pheromone = getPan().get_pheromone(x, y + 1);
+                y_dest = y + 1;  //si le niveau de pheromone est supérieur à celui de la case actuelle, 
+                                 //on stocke ses coordonnées comme destination suivante
+                pheromone = getPan().get_pheromone(x, y + 1); // on utilise le niveau de phéromone de destination comme nouvelle référence
 
             }
-            if (getPan().get_pheromone(x, y + 1) == pheromone) {
+            if (getPan().get_pheromone(x, y + 1) == pheromone) { // si le niveau de phéromone est égal a celui de la position actuelle, on a 
+                                                                 // une chance sur deux de choisir la case supérieure comme destination suivante
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x;
@@ -1454,13 +1490,17 @@ public class Fenetre extends JFrame {
             }
         }
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x - 1, y)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x - 1, y))) {
+            // On teste la case à droite à la position actuelle pour savoir si c'est un mur et si l'individu y est deja passé
+            // si le test est négatif, on regarde le niveau de phéromone en présence
             if (getPan().get_pheromone(x - 1, y) > pheromone) {
                 x_dest = x - 1;
-                y_dest = y;
-                pheromone = getPan().get_pheromone(x - 1, y);
+                y_dest = y;//si le niveau de pheromone est supérieur à celui de la case actuelle, 
+                             //on stocke ses coordonnées comme destination suivante
+                pheromone = getPan().get_pheromone(x - 1, y);// on utilise le niveau de phéromone de destination comme nouvelle référence
 
             }
-            if (getPan().get_pheromone(x - 1, y) == pheromone) {
+            if (getPan().get_pheromone(x - 1, y) == pheromone) {// si le niveau de phéromone est égal a celui de la position actuelle, on a 
+                                                                 // une chance sur deux de choisir la case supérieure comme destination suivante
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x - 1;
@@ -1470,13 +1510,16 @@ public class Fenetre extends JFrame {
             }
         }
         if (!(echantillon_fourmis.getIndividu(i).getLabyrinthe().estMur(x, y - 1)) && !(echantillon_fourmis.getIndividu(i).getChemin().existeDeja(x, y - 1))) {
+             // On teste la case inférieure à la position actuelle pour savoir si c'est un mur et si l'individu y est deja passé
             if (getPan().get_pheromone(x, y - 1) > pheromone) {
                 x_dest = x;
-                y_dest = y - 1;
-                pheromone = getPan().get_pheromone(x, y - 1);
+                y_dest = y - 1;  //si le niveau de pheromone est supérieur à celui de la case actuelle, 
+                             //on stocke ses coordonnées comme destination suivante
+                pheromone = getPan().get_pheromone(x, y - 1);// on utilise le niveau de phéromone de destination comme nouvelle référence
 
             }
-            if (getPan().get_pheromone(x, y - 1) == pheromone) {
+            if (getPan().get_pheromone(x, y - 1) == pheromone) {// si le niveau de phéromone est égal a celui de la position actuelle, on a 
+                                                                 // une chance sur deux de choisir la case supérieure comme destination suivante
                 a = (int) (round(Math.random(), 0));
                 if (a == 0) {
                     x_dest = x;
