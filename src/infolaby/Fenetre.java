@@ -983,32 +983,36 @@ public class Fenetre extends JFrame {
      */
     public void Escalade() {
         // Initialisation
-        solution = false;
-        boolean bloque = false;
-        int x = 1;
-        int y = 1;
-        int distance = id_escalade.distance(x, y);
+        solution = false; // définir une variable booléenne pour tester la solution
+        boolean bloque = false; // définir une variable bouléenne pour tester la blocage
+        int x = 1; // initialisation de distance en x
+        int y = 1; // initialisation de distance en hy
+        int distance = id_escalade.distance(x, y); // initialisation la distance entre pion et point d'arrivée
 
 
-        // Boucle pour le déplacement    
+         // Boucle pour le d¨¦placement, la boucle s'arrete lorsque le programme est bloque ou qu'il y a une solution    
         while ((solution == false) && (bloque == false)) {
 
             // Recherche du meilleur voisin
+            // test de mur et calculer la distance de case de l'est et point d'arrivée
             if (!id_escalade.getLabyrinthe().estMur(x + 1, y) && (distance > id_escalade.distance(x + 1, y))) { // Test à l'Est
                 x = x + 1;
                 id_escalade.getChemin().AddDeplacement(x, y);
+            // test de mur et calculer la distance de case du sud et point d'arrivée
             } else if (!id_escalade.getLabyrinthe().estMur(x, y + 1) && (distance > id_escalade.distance(x, y + 1))) {
                 y = y + 1;
                 id_escalade.getChemin().AddDeplacement(x, y);
+            // test de mur et calculer la distance de case de l'Ouest et point d'arrivée
             } else if (!id_escalade.getLabyrinthe().estMur(x - 1, y) && (distance > id_escalade.distance(x - 1, y))) {
                 x = x - 1;
                 id_escalade.getChemin().AddDeplacement(x, y);
+            // test de mur et calculer la distance de case du Nord et point d'arrivée
             } else if (!id_escalade.getLabyrinthe().estMur(x, y - 1) && (distance > id_escalade.distance(x, y - 1))) {
                 y = y - 1;
                 id_escalade.getChemin().AddDeplacement(x, y);
             }
 
-            // Test bloque
+            // Test bloqué, si la distance ne change pas, le pion est bloqué
             if (distance == id_escalade.distance(x, y)) {
                 bloque = true;
             } else {
@@ -1018,10 +1022,11 @@ public class Fenetre extends JFrame {
             //Test solution
             solution = id_escalade.getLabyrinthe().estArrivee(x, y);
 
+            // Pause toutes les 10 itérations
             pause(id_escalade, 10);
         }
 
-
+        // Résultat
         System.out.println(" bloqué = " + bloque + " ; solution = " + solution);
     }
 
@@ -1033,10 +1038,11 @@ public class Fenetre extends JFrame {
 
         solution = false;
         boolean bloque = false;
-        int x = 1;
-        int y = 1;
-        int x_dest = x;
-        int y_dest = y;
+        int x = 1; // initialisation la distance en axe x
+        int y = 1; // initialisation la distance en axe y
+        int x_dest = x; // une variable intermédiaire pour la distance en x
+        int y_dest = y; // une variable interm¨¦diaire pour la distance en y
+        // variable pour la distance de chaque direction.
         int distance_Est;
         int distance_Sud;
         int distance_Ouest;
@@ -1046,7 +1052,7 @@ public class Fenetre extends JFrame {
 
         // Boucle d'execution de l'algorithme pour chaque individu
 
-        // Boucle de résolution
+        // Boucle de résolution, sortir de la boucle en cas de bloquage ou trvouer une solution
         while ((solution == false) && (bloque == false)) {
             x_dest = x;
             y_dest = y;
@@ -1065,6 +1071,7 @@ public class Fenetre extends JFrame {
                     y_dest = y + 1;
                     distance = distance_Sud;
                 }
+                // si les distances sont les m¨ºme, nous choisions une direction aléatoirement, pareil pour les autres directions suivantes
                 if (distance_Sud == distance) {
                     int a = (int) (round(Math.random(), 0));
                     if (a == 0) {
@@ -1109,17 +1116,17 @@ public class Fenetre extends JFrame {
             if (distance == id_tabous.distance(x, y)) {
                 bloque = true;
             }
-            x = x_dest;
-            y = y_dest;
+            x = x_dest; // on mis met à jour la distance entre pion et point d'arrivée en axe x
+            y = y_dest; // on mis met à jour la distance entre pion et point d'arrivée en axe y
             id_tabous.getChemin().AddDeplacement(x, y);
 
             //Test solution
             solution = id_tabous.getLabyrinthe().estArrivee(x, y);
 
-            pause(id_tabous, 10);
+            pause(id_tabous, 10); // Pause toutes les 10 itérations
 
         }
-
+        // Résultat
         System.out.println(" bloque = " + bloque + " ; solution = " + solution);
     }
 
@@ -1127,7 +1134,7 @@ public class Fenetre extends JFrame {
      * Resolution recuit simule
      */
     public void RecuitSimule() {
-        // TODO Auto-generated method stub
+        //fenLaby recuit_simule = new fenLaby();
     }
 
     /**
