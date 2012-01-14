@@ -93,6 +93,8 @@ public class Fenetre extends JFrame {
      * Variable algorithme genetique
      */
     private Echantillon_genetique echantillon_genetique;
+    
+    private Individu_genetique individu_meilleur_genetique;
     /**
      * Variable algorithme fourmis
      */
@@ -617,12 +619,28 @@ public class Fenetre extends JFrame {
 
         @Override
         public void run() {
+            iteration=1;
             tempspausefin = 0;
             long deb = Runtime.getRuntime().freeMemory();
             long debT = System.currentTimeMillis();
             AlgorithmeGenetique();
             memoire = deb - Runtime.getRuntime().freeMemory();
             temps = System.currentTimeMillis() - debT - tempspausefin;
+            individu_meilleur_genetique = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(2);
+            individu_meilleur_genetique.collision();
+            individu_meilleur_genetique.existence();
+            int nbcases = individu_meilleur_genetique.getNbcases();
+            individu_meilleur_genetique.getChemin().couper(nbcases);
+            getPan().getIndividu_afficher().getChemin().setDeplacement(individu_meilleur_genetique.getChemin().getDeplacement());
+            repaint();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            Individu ind = new Individu();
+            ind.getChemin().setDeplacement(individu_meilleur_genetique.getChemin().getDeplacement());
+            ScoreExploration(ind);
         }
     }
 
@@ -639,7 +657,26 @@ public class Fenetre extends JFrame {
             AlgorithmeColonieFourmis();
             memoire = deb - Runtime.getRuntime().freeMemory();
             temps = System.currentTimeMillis() - debT - tempspausefin;
-        }
+            // Choix de la meilleure fourmis en cours
+            int position = 0;
+            for (int l = 0; l < nbIndividu; l++) {
+                double score = 0.0;
+                if (doScore(echantillon_fourmis.getIndividu(l)) > score) {
+                    score = doScore(echantillon_fourmis.getIndividu(l));
+                    position = l;
+                }
+            }
+            // Affichage de la fourmis
+            getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(position));
+            repaint();
+            boutonLancer.setEnabled(true);
+            boutonArreter.setEnabled(false);
+            comboBoxAlpha.setEnabled(true);
+            comboBoxNbI.setEnabled(true);
+            comboBoxTypeResolution.setEnabled(true);
+            ScoreExploration(echantillon_fourmis.getIndividu(position));
+            }
+            
     }
 
     /**
@@ -656,7 +693,7 @@ public class Fenetre extends JFrame {
             memoire = deb - Runtime.getRuntime().freeMemory();
             temps = System.currentTimeMillis() - debT - tempspausefin;
             getPan().setIndividu_afficher(ind_propo);
-            repaint();
+            repaint();            
             boutonLancer.setEnabled(true);
             boutonArreter.setEnabled(false);
             comboBoxAlpha.setEnabled(true);
@@ -1171,8 +1208,8 @@ public class Fenetre extends JFrame {
         Individu_genetique echantillon_genetique_nouveau[] = new Individu_genetique[nbIndividu / 2];
         int proba;
         int proba2;
-        iteration = 1;
-        Individu_genetique ind = new Individu_genetique(alpha, 2);
+        
+        
         /*******************************************************************
          ************************** BOUCLES DE CALCUL ***********************
          *******************************************************************/
@@ -1326,6 +1363,9 @@ public class Fenetre extends JFrame {
             }
             System.out.println(nb_iteration);
             nb_iteration++;
+            
+            sendIteration();
+            iteration++;
 
             // 2.4) Vérification des conditions de fin
             if (nb_iteration == max_iterations) {
@@ -1336,50 +1376,8 @@ public class Fenetre extends JFrame {
                 passage = echantillon_genetique.afficher_meilleurIndividu(selection);
 
             }
-//            if(iteration % 101 == 0 && passage==false) {
-//                
-//                    animated = false;
-//                    sendIteration();
-//                    boutonContinuer.setEnabled(true);
-//                    Individu_genetique ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
-//                    ind.collision();
-//                    ind.existence();
-//                    int nbcases = ind.getNbcases();
-//                    ind.getChemin().couper(nbcases);
-//                    getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
-//                    repaint();
-//                    if (solution) {
-//                        iteration++;
-//                    }
-//                while(!animated){
-//                System.out.println(" attente " + iteration);
-//                try {
-//                    Thread.sleep(500);
-//                } catch (InterruptedException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
-//                
-//                }
-//                iteration++;
-//            }
-//            else{
-//                iteration++;
-//            }   
-
         } while (passage != true);
-        ind = echantillon_genetique.afficher_meilleurIndividuDansEchantillon(selection);
-        ind.collision();
-        ind.existence();
-        int nbcases = ind.getNbcases();
-        ind.getChemin().couper(nbcases);
-        getPan().getIndividu_afficher().getChemin().setDeplacement(ind.getChemin().getDeplacement());
-        repaint();
-        boutonLancer.setEnabled(true);
-        boutonArreter.setEnabled(false);
-        comboBoxAlpha.setEnabled(true);
-        comboBoxNbI.setEnabled(true);
-        comboBoxTypeResolution.setEnabled(true);
+        
     }
 
     /**
@@ -1387,11 +1385,12 @@ public class Fenetre extends JFrame {
      */
     public void AlgorithmeColonieFourmis() {
         echantillon_fourmis = new Echantillon(nbIndividu);
-        iteration = 0;
+        iteration = 1;
         getPan().init_matrice();
         double add_ph = 0.1;
         int iteration_max = 100;
         double coeff = 0.0;
+        double coeffDecroissance=0.9995;
         int x = 0;
         int y = 0;
         int[] dir;
@@ -1427,34 +1426,25 @@ public class Fenetre extends JFrame {
                 }
                 for (int n = 0; n <= 14; n++) {
                     for (int o = 0; o <= 14; o++) {
-                        getPan().set_pheromone(n, o, getPan().get_pheromone(n, o) * 0.99);
+                        getPan().set_pheromone(n, o, getPan().get_pheromone(n, o) * coeffDecroissance);
                     }
                 }
                 getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(i));
                 repaint();
+                
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
             }
+            sendIteration();
             iteration++;
         }
 
-        // Choix de la meilleure fourmis en cours
-        int position = 0;
-        for (int l = 0; l < nbIndividu; l++) {
-            double score = 0.0;
-            if (doScore(echantillon_fourmis.getIndividu(l)) > score) {
-                score = doScore(echantillon_fourmis.getIndividu(l));
-                position = l;
-            }
-        }
-        // Affichage de la fourmis
-        getPan().setIndividu_afficher(echantillon_fourmis.getIndividu(position));
-        repaint();
+
     }
 
     public int[] fourmisDeplacer(int x, int y, int i) {
