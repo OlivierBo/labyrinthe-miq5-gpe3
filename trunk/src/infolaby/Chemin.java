@@ -119,7 +119,7 @@ public class Chemin implements Cloneable {
 
        /**
          * Couper le deplacement d un individu
-         * @param longueur 
+         * @param longueur_chemin 
          *      Longueur a couper
          */
         public void couper(int longueur_chemin){
@@ -133,10 +133,18 @@ public class Chemin implements Cloneable {
  
         }
 
+        /**
+         * Renvoie la position actuelle en x
+         * @return abcsisse 
+         */
         public int get_last_x(){
             return deplacement[nbcases-1][0];
         }
 	
+         /**
+         * Renvoie la position actuelle en y
+         * @return oronnée
+         */
         public int get_last_y(){
             return deplacement[nbcases-1][1];
         }

@@ -121,7 +121,10 @@ public class Individu{
             }
         }
         
-        // On évalue la qualité de chaque individu grâce à la fonction de score.
+        
+        /**
+         * On évalue la qualité de chaque individu grâce à la fonction de score
+         */
     void fonction_score(){
         int nb_cases=chemin.getNbcases();
         int x = chemin.getDeplacement()[nb_cases-1][0];
