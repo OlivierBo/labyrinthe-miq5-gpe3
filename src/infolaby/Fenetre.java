@@ -865,7 +865,7 @@ public class Fenetre extends JFrame {
                         //Analyse des possibilités de chemin et mise en mémoire
 
                         //Est
-                        if (id_BFS.getChemin().existeDeja(x + 1, y) == false && id_BFS.getLabyrinthe().estMur(x + 1, y) == false) {
+                        if (  id_BFS.getLabyrinthe().estMur(x + 1, y) == false) {
                             if (DejaMem[x + 1][y] == false) {
                                 mem_positionX[i + 1][k] = x + 1;
                                 mem_positionY[i + 1][k] = y;
@@ -875,7 +875,7 @@ public class Fenetre extends JFrame {
                         }
 
                         //Sud
-                        if (id_BFS.getChemin().existeDeja(x, y + 1) == false && id_BFS.getLabyrinthe().estMur(x, y + 1) == false) {
+                        if ( id_BFS.getLabyrinthe().estMur(x, y + 1) == false) {
                             if (DejaMem[x][y + 1] == false) {
                                 mem_positionX[i + 1][k] = x;
                                 mem_positionY[i + 1][k] = y + 1;
@@ -885,7 +885,7 @@ public class Fenetre extends JFrame {
                         }
 
                         //Ouest
-                        if (id_BFS.getChemin().existeDeja(x - 1, y) == false && id_BFS.getLabyrinthe().estMur(x - 1, y) == false) {
+                        if ( id_BFS.getLabyrinthe().estMur(x - 1, y) == false) {
                             if (DejaMem[x - 1][y] == false) {
                                 mem_positionX[i + 1][k] = x - 1;
                                 mem_positionY[i + 1][k] = y;
@@ -894,7 +894,7 @@ public class Fenetre extends JFrame {
                             }
                         }
                         //Nord
-                        if (id_BFS.getChemin().existeDeja(x, y - 1) == false && id_BFS.getLabyrinthe().estMur(x, y - 1) == false) {
+                        if ( id_BFS.getLabyrinthe().estMur(x, y - 1) == false) {
                             if (DejaMem[x][y - 1] == false) {
                                 mem_positionX[i + 1][k] = x;
                                 mem_positionY[i + 1][k] = y - 1;
