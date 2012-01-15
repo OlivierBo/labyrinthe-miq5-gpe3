@@ -21,9 +21,16 @@ public class Panneau extends JPanel {
          */
         private Individu individu_afficher=new Individu();
 	
-        // Creation d'un tableau de pheromones
+        
+        /**
+         * Creation d'un tableau de pheromones
+         */
         private double[][] coeffPheromone = new double[15][15];
-
+        
+        
+        /**
+         * Initialisation du tableau de pheromones
+         */
         public void init_matrice() {
             for (int i = 0; i <= 14; i++) {
 
@@ -33,10 +40,26 @@ public class Panneau extends JPanel {
             }
         }
 
+        /**
+         * Accesseur
+         * @param x 
+         *      Abscisse
+         * @param y
+         *      Ordonnée
+         * 
+         * @return le coefficient de phéromone
+         */
         public double get_pheromone(int x, int y) {
             return coeffPheromone[y][x];
         }
 
+        /**
+         * Mutateur
+         * @param x 
+         *      Abscisse
+         * @param y
+         *      Ordonnée
+         */
         public void set_pheromone(int x, int y, double coeff){
             coeffPheromone[y][x]=coeff;
         }

@@ -93,7 +93,9 @@ public class Fenetre extends JFrame {
      * Variable algorithme genetique
      */
     private Echantillon_genetique echantillon_genetique;
-    
+    /**
+     * Variable algorithme genetique - meilleur individu
+     */
     private Individu_genetique individu_meilleur_genetique;
     /**
      * Variable algorithme fourmis
@@ -201,15 +203,12 @@ public class Fenetre extends JFrame {
 
         //Placement des info du bas
         south.setPreferredSize(new Dimension(500, 345));
-        //south.setLayout(new GridLayout(8, 2, 5, 5));
         south.add(new JLabel(""));
         south.add(labelE);
 
         west.setPreferredSize(new Dimension(500, 100));
-        //west2.setPreferredSize(new Dimension(10, 10));
         west.setLayout(new BorderLayout());
         west.add(north2, BorderLayout.NORTH);
-        //west.add(west2, BorderLayout.WEST);
         west.add(south, BorderLayout.WEST);
 
         //Placement du labyrinthe au milieu et layout final
@@ -217,7 +216,6 @@ public class Fenetre extends JFrame {
         container.setLayout(new BorderLayout());
         container.add(west, BorderLayout.WEST);
         container.add(pan, BorderLayout.CENTER);
-        //container.add (south, BorderLayout.SOUTH);
 
         // Activer l'interface
         this.setContentPane(container);
@@ -740,10 +738,20 @@ public class Fenetre extends JFrame {
         label1.setText("iteration =  " + iteration);
     }
 
+    /**
+     * Ecrire les informations au bas gauche de la fenetre
+     * @param str
+     *      Chaîne à écrire
+     */
     public void writeScore(String str) {
         labelE.setText(str);
     }
 
+     /**
+     * Calcul et affichage du score
+     * @param ind
+     *      Individu sur lequel le calcul est fait
+     */
     public void ScoreExploration(Individu ind) {
         double score = 0.0;
         int x = ind.getChemin().get_last_x();
@@ -753,6 +761,11 @@ public class Fenetre extends JFrame {
         writeScore("<html> Résultats de l'individu <br> solution : " + solution + "<br> Nombre de cases explorées : " + nbcases + "<br> Distance : " + (Math.sqrt(Math.pow(13 - x, 2) + Math.pow(13 - y, 2))) + "<br> Score : " + score + "<br> Memoire : " + (double) ((double) (memoire) / (1048576.0)) + "<br> Temps : " + (double) (temps) / 1000.0 + "</html>");
     }
 
+    /**
+     * Calcul du score
+     * @param ind
+     *      Individu sur lequel le calcul est fait
+     */
     public double doScore(Individu ind) {
         double score = 0.0;
         int x = ind.getChemin().get_last_x();
@@ -762,6 +775,13 @@ public class Fenetre extends JFrame {
         return score;
     }
 
+    /**
+     * Mise en pause d'un algorithme utilisant la variable globale iteration
+     * @param id
+     *      Individu sur lequel l'affichage est fait
+     * @param iter
+     *      Nombre d'itérations pour faire la pause
+     */
     public void pause(Individu id, int iter) {
         if (iteration % iter == 0) {
             tempspausedeb = System.currentTimeMillis();
@@ -1173,7 +1193,7 @@ public class Fenetre extends JFrame {
      * Resolution recuit simule
      */
     public void RecuitSimule() {
-        //fenLaby recuit_simule = new fenLaby();
+        fenLaby recuit_simule = new fenLaby();
     }
 
     /**

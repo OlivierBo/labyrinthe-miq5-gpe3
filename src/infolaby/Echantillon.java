@@ -81,6 +81,13 @@ public class Echantillon {
 		this.resolu=type;
 	}
 
+        /**
+         * Mutateur
+         * @param individu
+         *      Reconfigure l'individu i
+         * @param i
+         *      Position de l'individu
+         */
         public void setInd(Individu individu, int i){
 		individus[i]=individu;
 	}
